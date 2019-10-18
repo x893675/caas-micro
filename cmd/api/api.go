@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"os"
 	"os/signal"
 	"sync/atomic"
@@ -23,13 +22,13 @@ var (
 )
 
 func init() {
-	flag.StringVar(&configFile, "c", "", "配置文件(.json,.yaml,.toml)")
+	//flag.StringVar(&configFile, "c", "", "配置文件(.json,.yaml,.toml)")
 	//flag.StringVar(&swaggerDir, "swagger", "", "swagger目录")
 }
 
 func main() {
-	flag.Parse()
-
+	//flag.Parse()
+	configFile = "/api.toml"
 	if configFile == "" {
 		panic("请使用-c指定配置文件")
 	}
