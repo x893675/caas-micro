@@ -2,6 +2,7 @@ package ctl
 
 import (
 	"caas-micro/proto/auth"
+	"context"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +19,17 @@ type Login struct {
 }
 
 func (a *Login) Anything(c *gin.Context) {
-	c.JSON(200, map[string]string{
-		"message": "Hi, this is the Greeter API",
+	// c.JSON(200, map[string]string{
+	// 	"message": "Hi, this is the Greeter API",
+	// })
+	response, err := a.AtuhSrvClient.GenerateToken(context.TODO(), &auth.Request{
+		Username: "test",
+		Password: "test",
 	})
+
+	if err != nil {
+		c.JSON(500, err)
+	}
+
+	c.JSON(200, response)
 }

@@ -64,6 +64,7 @@ func InitHTTPServer(ctx context.Context, container *dig.Container) func() {
 	service := web.NewService(
 		web.Name("go.micro.api.greeter"),
 	)
+	service.Init()
 	service.Handle("/", InitWeb(container))
 
 	// go func() {
