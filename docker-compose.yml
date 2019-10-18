@@ -6,20 +6,22 @@ consul:
     - "8400:8400"
     - "8500:8500"
     - "8600:53/udp"
-micro:
-  command: --registry_address=consul:8500 api --handler=http
-  image: microhq/micro:latest
-  links:
-    - consul
-    - api
-  ports:
-    - "8080:8080"
+#micro:
+#  command: --registry_address=consul:8500 api --handler=http
+#  image: microhq/micro:latest
+#  links:
+#    - consul
+#    - api
+#  ports:
+#    - "8080:8080"
 api:
   build: ./cmd/api
   command: --registry_address=consul:8500
   links:
     - consul
     - auth
+  ports:
+    - "8080:8080"
 auth:
   build: ./cmd/auth
   command: --registry_address=consul:8500

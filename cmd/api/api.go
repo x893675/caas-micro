@@ -19,7 +19,8 @@ func main() {
 
 	// Create service
 	service := web.NewService(
-		web.Name("go.micro.api.caas-micro"),
+		web.Name("go.micro.web.caas-micro.api"),
+                web.Address("0.0.0.0:8080"),
 	)
 
 	service.Init()
@@ -32,8 +33,8 @@ func main() {
 	// Create RESTful handler (using Gin)
 	//say := new(Say)
 	router := gin.Default()
-	router.GET("/greeter", apiApp.LoginCtl.Anything)
-	router.GET("/greeter/:name", apiApp.LoginCtl.Hello)
+	router.GET("/v1/greeter", apiApp.LoginCtl.Anything)
+	router.GET("/v1/greeter/:name", apiApp.LoginCtl.Hello)
 
 	// Register Handler
 	service.Handle("/", router)
