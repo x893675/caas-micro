@@ -3,6 +3,7 @@ package ctl
 import (
 	"caas-micro/proto/auth"
 	"context"
+        "fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,6 +23,7 @@ func (a *Login) Anything(c *gin.Context) {
 	// c.JSON(200, map[string]string{
 	// 	"message": "Hi, this is the Greeter API",
 	// })
+        fmt.Println("in anything")
 	response, err := a.AtuhSrvClient.GenerateToken(context.TODO(), &auth.Request{
 		Username: "test",
 		Password: "test",

@@ -16,7 +16,7 @@ micro:
     - "8080:8080"
 api:
   build: ./cmd/api
-  command: --registry_address=consul:8500 -c /api.toml
+  command: --registry_address=consul:8500
   links:
     - consul
     - auth
