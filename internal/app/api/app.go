@@ -4,6 +4,7 @@ import (
 	"caas-micro/internal/app/api/config"
 	"caas-micro/pkg/logger"
 	"caas-micro/proto"
+	"caas-micro/proto/auth"
 	"context"
 	"os"
 
@@ -91,8 +92,9 @@ func BuildContainer() (*dig.Container, func()) {
 	// 创建依赖注入容器
 	container := dig.New()
 
-	err := proto.Inject(container)
-	handleError(err)
+	container.Provide(func() auth.AuthService {
+		return proto.InitAuth()
+	})
 
 	return container, nil
 }
