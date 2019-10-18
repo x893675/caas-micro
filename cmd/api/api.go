@@ -23,7 +23,8 @@ var (
 )
 
 func init() {
-	flag.StringVar(&swaggerDir, "swagger", "", "swagger目录")
+	flag.StringVar(&configFile, "c", "", "配置文件(.json,.yaml,.toml)")
+	//flag.StringVar(&swaggerDir, "swagger", "", "swagger目录")
 }
 
 func main() {

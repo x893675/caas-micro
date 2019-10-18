@@ -6,11 +6,9 @@ import (
 	iapi "caas-micro/internal/app/api/routers/api"
 	"caas-micro/pkg/logger"
 	"context"
-	"fmt"
-	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/micro/go-micro/web"
 	"go.uber.org/dig"
 )
 
@@ -53,31 +51,43 @@ func InitWeb(container *dig.Container) *gin.Engine {
 
 // InitHTTPServer 初始化http服务
 func InitHTTPServer(ctx context.Context, container *dig.Container) func() {
-	cfg := config.GetGlobalConfig().HTTP
-	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
-	srv := &http.Server{
-		Addr:         addr,
-		Handler:      InitWeb(container),
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		IdleTimeout:  15 * time.Second,
-	}
+	// cfg := config.GetGlobalConfig().HTTP
+	// addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
+	// srv := &http.Server{
+	// 	Addr:         addr,
+	// 	Handler:      InitWeb(container),
+	// 	ReadTimeout:  5 * time.Second,
+	// 	WriteTimeout: 10 * time.Second,
+	// 	IdleTimeout:  15 * time.Second,
+	// }
+	// Create service
+	service := web.NewService(
+		web.Name("go.micro.api.greeter"),
+	)
+	service.Handle("/", InitWeb(container))
 
+	// go func() {
+	// 	logger.Printf(ctx, "HTTP服务开始启动，地址监听在：[%s]", addr)
+	// 	err := srv.ListenAndServe()
+	// 	if err != nil && err != http.ErrServerClosed {
+	// 		logger.Errorf(ctx, err.Error())
+	// 	}
+	// }()
 	go func() {
-		logger.Printf(ctx, "HTTP服务开始启动，地址监听在：[%s]", addr)
-		err := srv.ListenAndServe()
-		if err != nil && err != http.ErrServerClosed {
+		err := service.Run()
+		if err != nil {
 			logger.Errorf(ctx, err.Error())
 		}
 	}()
 
-	return func() {
-		ctx, cancel := context.WithTimeout(ctx, time.Second*time.Duration(cfg.ShutdownTimeout))
-		defer cancel()
+	// return func() {
+	// 	ctx, cancel := context.WithTimeout(ctx, time.Second*time.Duration(cfg.ShutdownTimeout))
+	// 	defer cancel()
 
-		srv.SetKeepAlivesEnabled(false)
-		if err := srv.Shutdown(ctx); err != nil {
-			logger.Errorf(ctx, err.Error())
-		}
-	}
+	// 	srv.SetKeepAlivesEnabled(false)
+	// 	if err := srv.Shutdown(ctx); err != nil {
+	// 		logger.Errorf(ctx, err.Error())
+	// 	}
+	// }
+	return nil
 }
