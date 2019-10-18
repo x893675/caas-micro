@@ -1,0 +1,211 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+package user;
+
+
+
+service User {
+	rpc Query(QueryRequest) returns (QueryResult) {};
+	rpc QueryShow(QueryRequest) returns (UserShowQueryResult) {};
+	rpc Create(UserSchema) returns (UserSchema) {};
+	rpc Delete(DeleteUserRequest) returns (NullResult) {};
+	rpc Get(GetUserRequest) returns (UserSchema) {};
+	rpc Update(UpdateUserRequest) returns (UserSchema) {};
+	rpc UpdataStatus(UpdateUserStatusRequest) returns (NullResult) {};
+	rpc GetCurrentUser(GetUserRequest) returns (CurrentUserResult) {};
+	rpc UpdatePassword(UpdatePassRequest) returns (NullResult) {};
+}
+
+message QueryRequest{
+	string UserName = 1;
+	string LikeUserName = 2;
+	string LikeRealName = 3;
+	string Email = 4;
+	sint64 Status = 5;
+	repeated string RoleIDS = 6;
+	UserQueryOptions QueryOpt = 7;
+}
+
+message QueryResult{
+	repeated UserSchema Data = 1;
+	PaginationResult PageResult = 2;
+}
+
+message UserQueryOptions{
+	bool IncludeRoles = 1;
+	PaginationParam PageParam = 2;
+}
+
+message GetUserRequest{
+	string Uid = 1;
+	UserQueryOptions QueryOpt = 2;
+}
+
+message DeleteUserRequest{
+	string Uid = 1;
+}
+
+message UpdateUserRequest{
+	string Uid = 1;
+	UserSchema User = 2;
+}
+
+message UpdateUserStatusRequest{
+	string Uid = 1;
+	sint64 Status = 2;
+}
+
+message CurrentUserResult{
+	string RecordID = 1;
+	string UserName = 2;
+	string RealName = 3;
+	string Phone = 5;
+	string Email = 6;
+	repeated string RoleNames = 7;
+}
+
+message UpdatePassRequest{
+	string Uid = 1;
+	string OldPassword = 2;
+	string NewPassword = 3;
+}
+
+message NullResult{
+
+}
+
+message UserSchema{
+	string RecordID = 1;
+	string UserName = 2;
+	string RealName = 3;
+	string Password = 4;
+	string Phone = 5;
+	string Email = 6;
+	sint64 Status = 7;
+	string Creator = 8;
+	google.protobuf.Timestamp CreatedAt = 9;
+	repeated UserRole Roles = 10;
+}
+
+message UserRole{
+	string RoleID = 1;
+}
+
+message PaginationResult{
+	sint64 Total = 1;
+}
+
+message PaginationParam{
+	sint64 PageIndex = 1;
+	sint64 PageSize = 2;
+}
+
+message UserShow{
+	string RecordID = 1;
+	string UserName = 2;
+	string RealName = 3;
+	string Phone = 4;
+	string Email = 5;
+	sint64 Status = 6;
+	google.protobuf.Timestamp CreatedAt = 7;
+	repeated RoleSchema Roles = 8;
+}
+
+message UserShowQueryResult{
+	repeated UserShow Data = 1;
+	PaginationResult PageResult = 2;
+}
+
+message RoleSchema{
+	string RecordID = 1;
+	string Name = 2;
+	sint64 Sequence = 3;
+	string Memo = 4;
+	string Creator = 5;
+	google.protobuf.Timestamp CreatedAt = 6;
+	repeated RoleMenu Menus = 7;
+}
+
+message RoleMenu{
+	string MenuID = 1;
+	repeated string Actions = 2;
+	repeated string Resources =3;
+}
+
+message RoleQueryParam{
+	repeated string RecordIDs = 1;
+	string Name = 2;
+	string LikeName =3;
+	string UserID = 4;
+	RoleQueryOptions QueryOpt = 5;
+}
+
+message RoleQueryOptions{
+	bool IncludeMenus = 1;
+	PaginationParam PageParam = 2;
+}
+
+message RoleQueryResult{
+	repeated RoleSchema Data = 1;
+	PaginationResult PageResult = 2;
+}
+
+message MenuSchema{
+	string RecordID = 1;
+	string Name = 2;
+	sint64 Sequence = 3;
+	string Icon = 4;
+	string Router = 5;
+	sint64 Hidden = 6;
+	string ParentID = 7;
+	string ParentPath = 8;
+	string Creator = 9;
+	google.protobuf.Timestamp CreatedAt = 10;
+	repeated MenuAction Actions = 11;
+	repeated MenuResource Resources = 12;
+}
+
+message MenuAction{
+	string Code = 1;
+	string Name = 2;
+}
+
+message MenuResource{
+	string Code = 1;
+	string Name = 2;
+	string Method = 3;
+	string Path = 4;
+}
+
+message MenuQueryParam{
+	repeated string RecordIDs = 1;
+	string LikeName = 2;
+	string ParentID = 3;
+	string PrefixParentPath = 4;
+	sint64 Hidden = 5;
+}
+
+message MenuQueryOptions{
+	bool IncludeActions = 1;
+	bool IncludeResources = 2;
+	PaginationParam PageParam = 3;
+}
+
+message MenuQueryResult{
+	repeated MenuSchema Data = 1;
+	PaginationResult PageResult = 2;
+}
+
+message MenuTree{
+	string RecordID = 1;
+	string Name = 2;
+	sint64 Sequence = 3;
+	string Icon = 4;
+	string Router = 5;
+	sint64 Hidden = 6;
+	string ParentID = 7;
+	string ParentPath = 8;
+	repeated MenuAction Actions = 9;
+	repeated MenuResource Resources = 10;
+	repeated MenuTree Children = 11;
+}

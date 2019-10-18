@@ -4,15 +4,43 @@ package auth;
 
 
 service Auth {
-	rpc GenerateToken(Request) returns (Response) {};
-	rpc VertifyToken(Request) returns (Response) {};
+	rpc Verify(LoginRequest) returns (Token) {};
+	//rpc GenerateToken(Request) returns (Response) {};
+	rpc DestroyToken(TokenString) returns (NullResult) {};
+	rpc VertifyToken(TokenString) returns (VerifyResponse) {};
+	rpc OpensfiftVerify(LoginRequest) returns (OpenshiftAuthResult) {};
 }
 
+message LoginRequest{
+	string username = 1;
+	string password = 2;
+}
+
+message Token{
+	string AccessToken = 1;
+	string TokenType = 2;
+	int64 ExpiresAt = 3;
+}
+
+message TokenString{
+	string Token = 1;
+}
+
+message VerifyResponse{
+	string Uid = 1;
+}
 message Request {
 	string username = 1;
-        string password = 2;
+    string password = 2;
 }
 
-message Response {
-	string msg = 1;
+message OpenshiftAuthResult{
+	string RecordID = 1;
+	string UserName = 2;
+	string RealName = 3;
+	string Email = 4;
+}
+
+message NullResult{
+
 }

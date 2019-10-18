@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"caas-micro/internal/app/api/errors"
-	"caas-micro/internal/app/api/ginplus"
+	"caas-micro/internal/app/api/pkg/ginplus"
+	"caas-micro/pkg/errors"
 	"fmt"
 	"strings"
 

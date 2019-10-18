@@ -2,8 +2,7 @@ package middleware
 
 import (
 	"bytes"
-	"caas-micro/internal/app/api/ginplus"
-	"caas-micro/pkg/logger"
+	"caas-micro/internal/app/api/pkg/ginplus"
 	"fmt"
 	"io/ioutil"
 	"runtime"
@@ -23,8 +22,8 @@ func RecoveryMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
-				stack := stack(3)
-				logger.StartSpan(ginplus.NewContext(c)).WithField("stack", string(stack)).Errorf("[recover]: %v", err)
+				//stack := stack(3)
+				//logger.StartSpan(ginplus.NewContext(c)).WithField("stack", string(stack)).Errorf("[recover]: %v", err)
 				ginplus.ResError(c, nil)
 			}
 		}()
