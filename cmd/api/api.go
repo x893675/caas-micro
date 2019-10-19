@@ -7,22 +7,19 @@ import (
 	"github.com/micro/go-micro/web"
 )
 
-// var (
-// 	authSrcCl auth.AuthService
-// )
-
 func main() {
 
 	// Create service
 	service := web.NewService(
 		web.Name("go.micro.web.caas-micro.api"),
-		web.Address("0.0.0.0:8080"),
 	)
 
-	service.Init()
+	service.Init(
+		web.Address("0.0.0.0:8080"),
+        )
 
 	// setup Greeter Server Client
-	// authSrcCl = auth.NewAuthService("go.micro.srv.auth", client.DefaultClient)
+	// authSrcCl := auth.NewAuthService("go.micro.srv.auth", client.DefaultClient)
 	// loginctl := controller.NewLoginController(authSrcCl)
 	// apiApp := api.NewApiApplication(loginctl)
 	apiApp := CreateApiApplication()
@@ -40,3 +37,4 @@ func main() {
 		log.Fatal(err)
 	}
 }
+
