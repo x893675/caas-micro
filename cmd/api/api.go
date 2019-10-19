@@ -20,11 +20,11 @@ func main() {
 
 	// Create service
 	service := web.NewService(
-		web.Name("SERVICENAME"),
+		web.Name(SERVICENAME),
 	)
 
 	service.Init(
-		web.Address("WEBADDR"),
+		web.Address(WEBADDR),
 	)
 
 	// setup Greeter Server Client
