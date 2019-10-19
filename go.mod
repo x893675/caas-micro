@@ -9,5 +9,6 @@ require (
 	github.com/google/wire v0.3.0
 	github.com/json-iterator/go v1.1.7
 	github.com/micro/go-micro v1.12.0
-	github.com/sirupsen/logrus v1.4.2
+	github.com/pkg/errors v0.8.1
+	go.uber.org/zap v1.10.0
 )

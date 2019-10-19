@@ -27,22 +27,26 @@ func main() {
 		web.Address(WEBADDR),
 	)
 
-	// setup Greeter Server Client
-	// authSrcCl := auth.NewAuthService("go.micro.srv.auth", client.DefaultClient)
-	// loginctl := controller.NewLoginController(authSrcCl)
-	// apiApp := api.NewApiApplication(loginctl)
-	apiApp := CreateApiApplication()
-	// Create RESTful handler (using Gin)
-	//say := new(Say)
-	router := gin.Default()
-	router.GET("/v1/greeter", apiApp.LoginCtl.Anything)
-	router.GET("/v1/greeter/:name", apiApp.LoginCtl.Hello)
+	//apiApp := CreateApiApplication()
+	// router := gin.Default()
+	// router.GET("/v1/greeter", apiApp.LoginCtl.Anything)
+	// router.GET("/v1/greeter/:name", apiApp.LoginCtl.Hello)
+	//service.Handle("/", router)
 
-	// Register Handler
-	service.Handle("/", router)
+	service.Handle("/", InitWeb())
 
 	// Run server
 	if err := service.Run(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func InitWeb() *gin.Engine {
+	app := gin.New()
+
+	api := CreateApiApplication()
+
+	api.RegisterRouter(app)
+
+	return app
 }
