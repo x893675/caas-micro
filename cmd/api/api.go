@@ -10,7 +10,7 @@ import (
 
 var (
 	// SERVICENAME microservice name
-	SERVICENAME = util.GetEnvironment("SERVICE_NAME", "go.micro.web.caas-micro.api")
+	SERVICENAME = util.GetEnvironment("SERVICE_NAME", "go.micro.web.caas-micro")
 
 	// WEBADDR web service listen address
 	WEBADDR = util.GetEnvironment("WEB_LISTEN_ADDR", "0.0.0.0:8080")
