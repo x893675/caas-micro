@@ -5,14 +5,13 @@ package auth
 
 import (
 	fmt "fmt"
-	math "math"
-
 	proto "github.com/golang/protobuf/proto"
+	math "math"
+)
 
+import (
 	context "context"
-
 	client "github.com/micro/go-micro/client"
-
 	server "github.com/micro/go-micro/server"
 )
 
@@ -35,7 +34,9 @@ var _ server.Option
 // Client API for Auth service
 
 type AuthService interface {
+	Verify(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*Token, error)
 	GenerateToken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	DestroyToken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 	VertifyToken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 }
 
@@ -57,8 +58,28 @@ func NewAuthService(name string, c client.Client) AuthService {
 	}
 }
 
+func (c *authService) Verify(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*Token, error) {
+	req := c.c.NewRequest(c.name, "Auth.Verify", in)
+	out := new(Token)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authService) GenerateToken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "Auth.GenerateToken", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authService) DestroyToken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Auth.DestroyToken", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -80,13 +101,17 @@ func (c *authService) VertifyToken(ctx context.Context, in *Request, opts ...cli
 // Server API for Auth service
 
 type AuthHandler interface {
+	Verify(context.Context, *LoginRequest, *Token) error
 	GenerateToken(context.Context, *Request, *Response) error
+	DestroyToken(context.Context, *Request, *Response) error
 	VertifyToken(context.Context, *Request, *Response) error
 }
 
 func RegisterAuthHandler(s server.Server, hdlr AuthHandler, opts ...server.HandlerOption) error {
 	type auth interface {
+		Verify(ctx context.Context, in *LoginRequest, out *Token) error
 		GenerateToken(ctx context.Context, in *Request, out *Response) error
+		DestroyToken(ctx context.Context, in *Request, out *Response) error
 		VertifyToken(ctx context.Context, in *Request, out *Response) error
 	}
 	type Auth struct {
@@ -100,8 +125,16 @@ type authHandler struct {
 	AuthHandler
 }
 
+func (h *authHandler) Verify(ctx context.Context, in *LoginRequest, out *Token) error {
+	return h.AuthHandler.Verify(ctx, in, out)
+}
+
 func (h *authHandler) GenerateToken(ctx context.Context, in *Request, out *Response) error {
 	return h.AuthHandler.GenerateToken(ctx, in, out)
+}
+
+func (h *authHandler) DestroyToken(ctx context.Context, in *Request, out *Response) error {
+	return h.AuthHandler.DestroyToken(ctx, in, out)
 }
 
 func (h *authHandler) VertifyToken(ctx context.Context, in *Request, out *Response) error {

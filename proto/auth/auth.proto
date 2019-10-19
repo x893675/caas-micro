@@ -4,13 +4,26 @@ package auth;
 
 
 service Auth {
+	rpc Verify(LoginRequest) returns (Token) {};
 	rpc GenerateToken(Request) returns (Response) {};
+	rpc DestroyToken(Request) returns (Response) {};
 	rpc VertifyToken(Request) returns (Response) {};
+}
+
+message LoginRequest{
+	string username = 1;
+	string password = 2;
+}
+
+message Token{
+	string AccessToken = 1;
+	string TokenType = 2;
+	int64 ExpiresAt = 3;
 }
 
 message Request {
 	string username = 1;
-        string password = 2;
+    string password = 2;
 }
 
 message Response {

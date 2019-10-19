@@ -10,5 +10,6 @@ require (
 	github.com/json-iterator/go v1.1.7
 	github.com/micro/go-micro v1.12.0
 	github.com/pkg/errors v0.8.1
+	github.com/prometheus/common v0.6.0
 	go.uber.org/zap v1.10.0
 )
