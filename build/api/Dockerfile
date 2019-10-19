@@ -1,3 +1,3 @@
 FROM alpine:3.2
-ADD api /api
+ADD ./dist/api /api
 ENTRYPOINT [ "/api" ]
