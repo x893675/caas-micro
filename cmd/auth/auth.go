@@ -21,6 +21,19 @@ func (a *Auth) GenerateToken(ctx context.Context, req *auth.Request, rsp *auth.R
 	return nil
 }
 
+func (a *Auth) DestroyToken(ctx context.Context, req *auth.Request, rsp *auth.Response) error {
+	log.Println("in DestroyToken")
+	log.Println(req.Username)
+	log.Println(req.Password)
+	rsp.Msg = "Hello " + req.Username
+	return nil
+}
+
+func (a *Auth) Verify(ctx context.Context, req *auth.LoginRequest, rsp *auth.Token) error {
+	log.Println("in Verify")
+	return nil
+}
+
 func (a *Auth) VertifyToken(ctx context.Context, req *auth.Request, rsp *auth.Response) error {
 	log.Println("in VertifyToken")
 	log.Println(req.Username)
