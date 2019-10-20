@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/micro/go-micro"
-	"github.com/micro/go-micro/client"
 
 	"context"
 
@@ -69,17 +68,19 @@ func main() {
 		micro.RegisterInterval(time.Second*10),
 	)
 
-	// optionally setup command line usage
 	service.Init()
 
-	authServer := &Auth{
-		userSVc: user.NewUserService("go.micro.srv.user", client.DefaultClient),
+	// authServer := &Auth{
+	// 	userSVc: user.NewUserService("go.micro.srv.user", client.DefaultClient),
+	// }
+
+	authServer, err := CreateAuthServer()
+	if err != nil {
+		log.Fatal(err)
 	}
-	// Register Handlers
-	//hello.RegisterSayHandler(service.Server(), new(Say))
-	//auth.RegisterAuthHandler(service.Server(), new(Auth))
+
 	auth.RegisterAuthHandler(service.Server(), authServer)
-	// Run server
+
 	if err := service.Run(); err != nil {
 		log.Fatal(err)
 	}
