@@ -64,6 +64,15 @@ func ResSuccess(c *gin.Context, v interface{}) {
 	ResJSON(c, http.StatusOK, v)
 }
 
+// ParseJSON 解析请求JSON
+func ParseJSON(c *gin.Context, obj interface{}) error {
+	if err := c.ShouldBindJSON(obj); err != nil {
+		//logger.Warnf(NewContext(c), err.Error())
+		return errors.ErrInvalidRequestParameter
+	}
+	return nil
+}
+
 // ResJSON 响应JSON数据
 func ResJSON(c *gin.Context, status int, v interface{}) {
 	buf, err := util.JSONMarshal(v)

@@ -10,7 +10,7 @@ service User {
 
 message Request {
 	string username = 1;
-        string password = 2;
+    string password = 2;
 }
 
 message Response {

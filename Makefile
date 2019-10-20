@@ -1,4 +1,4 @@
-apps = 'api' 'auth'
+apps = 'api' 'auth' 'user'
 
 .PHONY: wire
 wire:

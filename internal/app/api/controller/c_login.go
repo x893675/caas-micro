@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"caas-micro/internal/app/api/pkg/ginplus"
+	"caas-micro/internal/app/api/schema"
 	"caas-micro/proto/auth"
 	"context"
 	"log"
@@ -40,4 +42,30 @@ func (s *LoginController) Hello(c *gin.Context) {
 	}
 
 	c.JSON(200, response)
+}
+
+func (s *LoginController) Login(c *gin.Context) {
+	log.Print("Received api.Login request")
+
+	var item schema.LoginParam
+	if err := ginplus.ParseJSON(c, &item); err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+	response, err := s.authSvc.Verify(context.TODO(), &auth.LoginRequest{
+		Username: item.UserName,
+		Password: item.Password,
+	})
+
+	if err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+	ginplus.ResSuccess(c, response)
+	// name := c.Param("name")
+
+	// response, err := s.authSvc.GenerateToken(context.TODO(), &auth.Request{
+	// 	Username: name,
+	// 	Password: name,
+	// })
 }

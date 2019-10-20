@@ -1,17 +1,22 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
 	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/client"
 
 	"context"
 
 	"caas-micro/proto/auth"
+	"caas-micro/proto/user"
 )
 
-type Auth struct{}
+type Auth struct {
+	userSVc user.UserService
+}
 
 func (a *Auth) GenerateToken(ctx context.Context, req *auth.Request, rsp *auth.Response) error {
 	log.Println("in GenerateToken")
@@ -31,6 +36,17 @@ func (a *Auth) DestroyToken(ctx context.Context, req *auth.Request, rsp *auth.Re
 
 func (a *Auth) Verify(ctx context.Context, req *auth.LoginRequest, rsp *auth.Token) error {
 	log.Println("in Verify")
+	response, err := a.userSVc.Query(ctx, &user.Request{
+		Username: req.Username,
+		Password: req.Password,
+	})
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	rsp.AccessToken = response.Msg
+	rsp.TokenType = "test"
+	rsp.ExpiresAt = 2000000
 	return nil
 }
 
@@ -52,9 +68,13 @@ func main() {
 	// optionally setup command line usage
 	service.Init()
 
+	authServer := &Auth{
+		userSVc: user.NewUserService("go.micro.srv.user", client.DefaultClient),
+	}
 	// Register Handlers
 	//hello.RegisterSayHandler(service.Server(), new(Say))
-	auth.RegisterAuthHandler(service.Server(), new(Auth))
+	//auth.RegisterAuthHandler(service.Server(), new(Auth))
+	auth.RegisterAuthHandler(service.Server(), authServer)
 	// Run server
 	if err := service.Run(); err != nil {
 		log.Fatal(err)

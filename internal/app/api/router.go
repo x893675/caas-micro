@@ -8,5 +8,6 @@ func (api *ApiApplication) RegisterRouter(app *gin.Engine) {
 	{
 		v1.GET("/greeter", api.LoginCtl.Anything)
 		v1.GET("/greeter/:name", api.LoginCtl.Hello)
+		v1.POST("/login", api.LoginCtl.Login)
 	}
 }
