@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -54,8 +55,11 @@ func (a *Auth) VertifyToken(ctx context.Context, req *auth.Request, rsp *auth.Re
 	log.Println("in VertifyToken")
 	log.Println(req.Username)
 	log.Println(req.Password)
-	rsp.Msg = "Hello " + req.Username
-	return nil
+	if req.Username == "test" && req.Password == "test" {
+		rsp.Msg = "userid"
+		return nil
+	}
+	return errors.New("invalid token")
 }
 
 func main() {

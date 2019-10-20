@@ -5,6 +5,7 @@ import (
 	"caas-micro/pkg/util"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -71,6 +72,17 @@ func ParseJSON(c *gin.Context, obj interface{}) error {
 		return errors.ErrInvalidRequestParameter
 	}
 	return nil
+}
+
+// GetToken 获取用户令牌
+func GetToken(c *gin.Context) string {
+	var token string
+	auth := c.GetHeader("Authorization")
+	prefix := "Bearer "
+	if auth != "" && strings.HasPrefix(auth, prefix) {
+		token = auth[len(prefix):]
+	}
+	return token
 }
 
 // ResJSON 响应JSON数据

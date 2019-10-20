@@ -1,9 +1,20 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"caas-micro/internal/app/api/middleware"
+
+	"github.com/gin-gonic/gin"
+)
 
 func (api *ApiApplication) RegisterRouter(app *gin.Engine) {
 	g := app.Group("/api")
+	// 用户身份授权
+	g.Use(middleware.UserAuthMiddleware(
+		api.LoginCtl.AuthSvc,
+		middleware.AllowMethodAndPathPrefixSkipper(
+			middleware.JoinRouter("GET", "/api/v1/login"),
+		),
+	))
 	v1 := g.Group("/v1")
 	{
 		v1.GET("/greeter", api.LoginCtl.Anything)

@@ -10,12 +10,12 @@ import (
 )
 
 type LoginController struct {
-	authSvc auth.AuthService
+	AuthSvc auth.AuthService
 }
 
 func NewLoginController(auth auth.AuthService) *LoginController {
 	return &LoginController{
-		authSvc: auth,
+		AuthSvc: auth,
 	}
 }
 
@@ -31,7 +31,7 @@ func (s *LoginController) Hello(c *gin.Context) {
 
 	name := c.Param("name")
 
-	response, err := s.authSvc.GenerateToken(context.TODO(), &auth.Request{
+	response, err := s.AuthSvc.GenerateToken(context.TODO(), &auth.Request{
 		Username: name,
 		Password: name,
 	})
@@ -51,7 +51,7 @@ func (s *LoginController) Login(c *gin.Context) {
 		ginplus.ResError(c, err)
 		return
 	}
-	response, err := s.authSvc.Verify(context.TODO(), &item)
+	response, err := s.AuthSvc.Verify(context.TODO(), &item)
 
 	if err != nil {
 		ginplus.ResError(c, err)
