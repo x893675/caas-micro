@@ -1,6 +1,7 @@
 package main
 
 import (
+	"caas-micro/internal/app/api/middleware"
 	"caas-micro/pkg/util"
 	"log"
 
@@ -14,6 +15,8 @@ var (
 
 	// WEBADDR web service listen address
 	WEBADDR = util.GetEnvironment("WEB_LISTEN_ADDR", "0.0.0.0:8080")
+
+	RUNMODE = util.GetEnvironment("RUN_MODE", "debug")
 )
 
 func main() {
@@ -42,8 +45,13 @@ func main() {
 }
 
 func InitWeb() *gin.Engine {
-	app := gin.New()
+	gin.SetMode(RUNMODE)
 
+	app := gin.New()
+	app.NoMethod(middleware.NoMethodHandler())
+	app.NoRoute(middleware.NoRouteHandler())
+	// 崩溃恢复
+	app.Use(middleware.RecoveryMiddleware())
 	api := CreateApiApplication()
 
 	api.RegisterRouter(app)
