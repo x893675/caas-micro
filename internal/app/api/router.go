@@ -12,7 +12,7 @@ func (api *ApiApplication) RegisterRouter(app *gin.Engine) {
 	g.Use(middleware.UserAuthMiddleware(
 		api.LoginCtl.AuthSvc,
 		middleware.AllowMethodAndPathPrefixSkipper(
-			middleware.JoinRouter("GET", "/api/v1/login"),
+			middleware.JoinRouter("POST", "/api/v1/login"),
 		),
 	))
 	v1 := g.Group("/v1")
