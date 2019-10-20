@@ -29,6 +29,7 @@ func UserAuthMiddleware(a auth.AuthService, skipper ...SkipperFunc) gin.HandlerF
 			})
 			if err != nil {
 				ginplus.ResError(c, err)
+				return
 			}
 			userID = resp.GetMsg()
 		}
