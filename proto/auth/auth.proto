@@ -5,7 +5,7 @@ package auth;
 
 service Auth {
 	rpc Verify(LoginRequest) returns (Token) {};
-	rpc GenerateToken(Request) returns (Response) {};
+	//rpc GenerateToken(Request) returns (Response) {};
 	rpc DestroyToken(Request) returns (Response) {};
 	rpc VertifyToken(Request) returns (Response) {};
 }
@@ -20,6 +20,10 @@ message Token{
 	string TokenType = 2;
 	int64 ExpiresAt = 3;
 }
+
+// message GenTokenRequest{
+// 	string userid =1;
+// }
 
 message Request {
 	string username = 1;

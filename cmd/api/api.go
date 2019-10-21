@@ -30,12 +30,6 @@ func main() {
 		web.Address(WEBADDR),
 	)
 
-	//apiApp := CreateApiApplication()
-	// router := gin.Default()
-	// router.GET("/v1/greeter", apiApp.LoginCtl.Anything)
-	// router.GET("/v1/greeter/:name", apiApp.LoginCtl.Hello)
-	//service.Handle("/", router)
-
 	service.Handle("/", InitWeb())
 
 	// Run server

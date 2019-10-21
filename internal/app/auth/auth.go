@@ -4,11 +4,11 @@ import (
 	"caas-micro/internal/app/auth/auther"
 	"caas-micro/internal/app/auth/auther/jwtauth"
 	"caas-micro/internal/app/auth/auther/jwtauth/store/buntdb"
+	"caas-micro/pkg/errors"
 	"caas-micro/pkg/util"
 	"caas-micro/proto/auth"
 	"caas-micro/proto/user"
 	"context"
-	"errors"
 	"fmt"
 	"log"
 
@@ -73,11 +73,23 @@ func NewAuther() (auther.Auther, error) {
 	return jwtauth.New(store, opts...), nil
 }
 
-func (a *AuthServer) GenerateToken(ctx context.Context, req *auth.Request, rsp *auth.Response) error {
-	log.Println("in GenerateToken")
-	log.Println(req.Username)
-	log.Println(req.Password)
-	rsp.Msg = "Hello " + req.Username
+// func (a *AuthServer) GenerateToken(ctx context.Context, req *auth.Request, rsp *auth.Response) error {
+// 	log.Println("in GenerateToken")
+// 	log.Println(req.Username)
+// 	log.Println(req.Password)
+// 	rsp.Msg = "Hello " + req.Username
+// 	return nil
+// }
+
+func (a *AuthServer) generateToken(ctx context.Context, userID string, token *auth.Token) error {
+	tokenInfo, err := a.auther.GenerateToken(userID)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	token.AccessToken = tokenInfo.GetAccessToken()
+	token.TokenType = tokenInfo.GetTokenType()
+	token.ExpiresAt = tokenInfo.GetExpiresAt()
 	return nil
 }
 
@@ -99,9 +111,14 @@ func (a *AuthServer) Verify(ctx context.Context, req *auth.LoginRequest, rsp *au
 		fmt.Println(err.Error())
 		return err
 	}
-	rsp.AccessToken = response.Msg
-	rsp.TokenType = "test"
-	rsp.ExpiresAt = 2000000
+
+	userid := response.Msg
+
+	err = a.generateToken(ctx, userid, rsp)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
 	return nil
 }
 

@@ -15,7 +15,7 @@ func (user *User) Query(ctx context.Context, req *user.Request, rsp *user.Respon
 	log.Println("in usersvc.Query")
 	log.Println(req.Username)
 	log.Println(req.Password)
-	rsp.Msg = "login sucessful"
+	rsp.Msg = "successful"
 	return nil
 }
 
