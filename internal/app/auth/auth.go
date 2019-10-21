@@ -130,5 +130,5 @@ func (a *AuthServer) VertifyToken(ctx context.Context, req *auth.Request, rsp *a
 		rsp.Msg = "userid"
 		return nil
 	}
-	return errors.New("invalid token")
+	return errors.ErrInvalidToken
 }

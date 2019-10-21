@@ -44,6 +44,7 @@ var (
 	ErrLoginInvalidVerifyCode = New("无效的验证码")
 	ErrLoginInvalidEmail      = New("邮箱不正确")
 	ErrResetInvalidEmail      = New("邮箱重置链接已过期")
+	ErrInvalidToken           = New("无效的token")
 
 	// menu
 	ErrMenuInvalidParent  = New("无效的父级节点")
