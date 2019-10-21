@@ -69,6 +69,7 @@ func init() {
 	newErrorCode(ErrNoPerm, 9999, ErrNoPerm.Error(), 401)
 	newErrorCode(ErrNoResourcePerm, 401, ErrNoResourcePerm.Error(), 401)
 	newErrorCode(ErrInvalidToken, 401, ErrInvalidToken.Error(), 401)
+	//newUnauthorizedError(ErrInvalidToken)
 
 	// 用户错误
 	newBadRequestError(ErrInvalidUserName)

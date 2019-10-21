@@ -1,5 +1,7 @@
 package errors
 
+import "fmt"
+
 var (
 	codes = make(map[error]ErrorCode)
 )
@@ -26,6 +28,8 @@ func newErrorCode(err error, code int, message string, status ...int) error {
 
 // FromErrorCode 获取错误码
 func FromErrorCode(err error) (ErrorCode, bool) {
+	fmt.Println(codes)
+	fmt.Println(err)
 	v, ok := codes[err]
 	return v, ok
 }
