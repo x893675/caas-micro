@@ -31,6 +31,8 @@ func FromErrorCode(err error) (ErrorCode, bool) {
 	fmt.Println(codes)
 	fmt.Println(err)
 	v, ok := codes[err]
+	fmt.Println(v)
+	fmt.Println(ok)
 	return v, ok
 }
 
