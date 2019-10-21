@@ -28,10 +28,6 @@ func UserAuthMiddleware(a auth.AuthService, skipper ...SkipperFunc) gin.HandlerF
 				Password: t,
 			})
 			if err != nil {
-				if err == errors.ErrInvalidToken {
-					ginplus.ResError(c, errors.ErrNoPerm)
-					return
-				}
 				ginplus.ResError(c, err)
 				return
 			}
