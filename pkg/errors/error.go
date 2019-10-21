@@ -6,10 +6,11 @@ import (
 
 // 定义错误函数的别名
 var (
-	New       = errors.New
-	Wrap      = errors.Wrap
-	Wrapf     = errors.Wrapf
-	WithStack = errors.WithStack
+	New             = errors.New
+	Wrap            = errors.Wrap
+	Wrapf           = errors.Wrapf
+	WithStack       = errors.WithStack
+	ErrInvalidToken = errors.New("无效的token")
 )
 
 // 定义错误
@@ -44,7 +45,6 @@ var (
 	ErrLoginInvalidVerifyCode = New("无效的验证码")
 	ErrLoginInvalidEmail      = New("邮箱不正确")
 	ErrResetInvalidEmail      = New("邮箱重置链接已过期")
-	ErrInvalidToken           = New("无效的token")
 
 	// menu
 	ErrMenuInvalidParent  = New("无效的父级节点")
