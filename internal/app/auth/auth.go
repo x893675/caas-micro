@@ -103,16 +103,17 @@ func (a *AuthServer) DestroyToken(ctx context.Context, req *auth.Request, rsp *a
 
 func (a *AuthServer) Verify(ctx context.Context, req *auth.LoginRequest, rsp *auth.Token) error {
 	log.Println("in Verify")
-	response, err := a.userSvc.Query(ctx, &user.Request{
-		Username: req.Username,
-		Password: req.Password,
+	response, err := a.userSvc.Query(ctx, &user.QueryRequest{
+		UserName: req.Username,
 	})
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
+	} else if len(response.Data) == 0 {
+		return errors.ErrInvalidUserName
 	}
 
-	userid := response.Msg
+	userid := response.Data[0].RecordID
 
 	err = a.generateToken(ctx, userid, rsp)
 	if err != nil {

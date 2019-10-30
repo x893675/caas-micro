@@ -1,11 +1,11 @@
 syntax = "proto3";
-
+import "google/protobuf/timestamp.proto";
 package user;
 
 
 
 service User {
-	rpc Query(Request) returns (Response) {};
+	rpc Query(QueryRequest) returns (QueryResult) {};
 }
 
 message Request {
@@ -15,4 +15,39 @@ message Request {
 
 message Response {
 	string msg = 1;
+}
+
+message QueryRequest{
+	string UserName = 1;
+	string LikeUserName = 2;
+	string LikeRealName = 3;
+	string Email = 4;
+	int32 Status = 5;
+	repeated string RoleIDS = 6;
+}
+
+message QueryResult{
+	repeated UserEntity Data = 1;
+	PaginationResult PageResult = 2;
+}
+
+message UserEntity{
+	string RecordID = 1;
+	string UserName = 2;
+	string RealName = 3;
+	string Password = 4;
+	string Phone = 5;
+	string Email = 6;
+	int32 Status = 7;
+	string Creator = 8;
+	google.protobuf.Timestamp CreatedAt = 9;
+	repeated UserRole Roles = 10;
+}
+
+message UserRole{
+	string RoleID = 1;
+}
+
+message PaginationResult{
+	int64 Total = 1;
 }

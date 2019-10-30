@@ -2,22 +2,20 @@ package main
 
 import (
 	"caas-micro/proto/user"
-	"context"
 	"log"
 	"time"
 
 	"github.com/micro/go-micro"
 )
 
-type User struct{}
-
-func (user *User) Query(ctx context.Context, req *user.Request, rsp *user.Response) error {
-	log.Println("in usersvc.Query")
-	log.Println(req.Username)
-	log.Println(req.Password)
-	rsp.Msg = "successful"
-	return nil
-}
+//type User struct{}
+//
+//func (user *User) Query(ctx context.Context, req *user.QueryRequest, rsp *user.QueryResult) error {
+//	log.Println("in usersvc.Query")
+//	log.Println(req.UserName)
+//	//log.Println(req.)
+//	return nil
+//}
 
 func main() {
 	service := micro.NewService(
@@ -31,7 +29,13 @@ func main() {
 
 	// Register Handlers
 	//hello.RegisterSayHandler(service.Server(), new(Say))
-	user.RegisterUserHandler(service.Server(), new(User))
+	//user.RegisterUserHandler(service.Server(), new(User))
+
+	userServer, err := CreateUserServer()
+	if err != nil {
+		log.Fatal(err)
+	}
+	user.RegisterUserHandler(service.Server(), userServer)
 	// Run server
 	if err := service.Run(); err != nil {
 		log.Fatal(err)

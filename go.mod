@@ -11,7 +11,6 @@ require (
 	github.com/json-iterator/go v1.1.7
 	github.com/micro/go-micro v1.12.0
 	github.com/pkg/errors v0.8.1
-	github.com/prometheus/common v0.6.0
 	github.com/tidwall/btree v0.0.0-20170113224114-9876f1454cf0 // indirect
 	github.com/tidwall/buntdb v1.1.0
 	github.com/tidwall/gjson v1.3.2 // indirect

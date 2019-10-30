@@ -22,6 +22,8 @@ github.com/coreos/etcd/raft/raftpb
 github.com/coreos/go-systemd/journal
 # github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f
 github.com/coreos/pkg/capnslog
+# github.com/dgrijalva/jwt-go v3.2.0+incompatible
+github.com/dgrijalva/jwt-go
 # github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3
 github.com/gin-contrib/sse
 # github.com/gin-gonic/gin v1.4.0
@@ -163,6 +165,23 @@ github.com/nats-io/nkeys
 github.com/nats-io/nuid
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
+# github.com/tidwall/btree v0.0.0-20170113224114-9876f1454cf0
+github.com/tidwall/btree
+# github.com/tidwall/buntdb v1.1.0
+github.com/tidwall/buntdb
+# github.com/tidwall/gjson v1.3.2
+github.com/tidwall/gjson
+# github.com/tidwall/grect v0.0.0-20161006141115-ba9a043346eb
+github.com/tidwall/grect
+# github.com/tidwall/match v1.0.1
+github.com/tidwall/match
+# github.com/tidwall/pretty v1.0.0
+github.com/tidwall/pretty
+# github.com/tidwall/rtree v0.0.0-20180113144539-6cd427091e0e
+github.com/tidwall/rtree
+github.com/tidwall/rtree/base
+# github.com/tidwall/tinyqueue v0.0.0-20180302190814-1e39f5511563
+github.com/tidwall/tinyqueue
 # github.com/ugorji/go v1.1.4
 github.com/ugorji/go/codec
 # go.uber.org/atomic v1.4.0

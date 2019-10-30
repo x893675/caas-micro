@@ -6,6 +6,7 @@ package user
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/timestamp"
 	math "math"
 )
 
@@ -34,7 +35,7 @@ var _ server.Option
 // Client API for User service
 
 type UserService interface {
-	Query(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	Query(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResult, error)
 }
 
 type userService struct {
@@ -55,9 +56,9 @@ func NewUserService(name string, c client.Client) UserService {
 	}
 }
 
-func (c *userService) Query(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+func (c *userService) Query(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResult, error) {
 	req := c.c.NewRequest(c.name, "User.Query", in)
-	out := new(Response)
+	out := new(QueryResult)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -68,12 +69,12 @@ func (c *userService) Query(ctx context.Context, in *Request, opts ...client.Cal
 // Server API for User service
 
 type UserHandler interface {
-	Query(context.Context, *Request, *Response) error
+	Query(context.Context, *QueryRequest, *QueryResult) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) error {
 	type user interface {
-		Query(ctx context.Context, in *Request, out *Response) error
+		Query(ctx context.Context, in *QueryRequest, out *QueryResult) error
 	}
 	type User struct {
 		user
@@ -86,6 +87,6 @@ type userHandler struct {
 	UserHandler
 }
 
-func (h *userHandler) Query(ctx context.Context, in *Request, out *Response) error {
+func (h *userHandler) Query(ctx context.Context, in *QueryRequest, out *QueryResult) error {
 	return h.UserHandler.Query(ctx, in, out)
 }
