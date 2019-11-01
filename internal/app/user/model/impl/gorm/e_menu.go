@@ -1,4 +1,4 @@
-package entity
+package gorm
 
 import (
 	//"caas-micro/internal/app/user/model/impl/gorm"
@@ -7,7 +7,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 )
 
-//// GetMenuDB 获取菜单存储
+// GetMenuDB 获取菜单存储
 //func GetMenuDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
 //	return getDBWithModel(ctx, defDB, Menu{})
 //}

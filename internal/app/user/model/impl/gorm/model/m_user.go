@@ -2,7 +2,6 @@ package model
 
 import (
 	"caas-micro/internal/app/user/model/impl/gorm"
-	"caas-micro/internal/app/user/model/impl/gorm/entity"
 	"caas-micro/pkg/errors"
 	"caas-micro/proto/user"
 	"context"
@@ -28,7 +27,7 @@ func (a *User) getQueryOption(opts ...user.UserQueryOptions) user.UserQueryOptio
 
 // Query 查询数据
 func (a *User) Query(ctx context.Context, params user.QueryRequest, opts ...user.UserQueryOptions) (*user.QueryResult, error) {
-	db := entity.GetUserDB(ctx, a.db).DB
+	db := gorm.GetUserDB(ctx, a.db).DB
 	if v := params.UserName; v != "" {
 		db = db.Where("user_name=?", v)
 	}
@@ -45,13 +44,13 @@ func (a *User) Query(ctx context.Context, params user.QueryRequest, opts ...user
 		db = db.Where("status=?", v)
 	}
 	if v := params.RoleIDS; len(v) > 0 {
-		subQuery := entity.GetUserRoleDB(ctx, a.db).Select("user_id").Where("role_id IN(?)", v).SubQuery()
+		subQuery := gorm.GetUserRoleDB(ctx, a.db).Select("user_id").Where("role_id IN(?)", v).SubQuery()
 		db = db.Where("record_id IN(?)", subQuery)
 	}
 	db = db.Order("id DESC")
 
 	opt := a.getQueryOption(opts...)
-	var list entity.Users
+	var list gorm.Users
 	pr, err := WrapPageQuery(db, opt.PageParam, &list)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -79,7 +78,7 @@ func (a *User) fillSchemaUsers(ctx context.Context, items []*user.UserSchema, op
 			userIDs[i] = item.RecordID
 		}
 
-		var roleList entity.UserRoles
+		var roleList gorm.UserRoles
 		if opt.IncludeRoles {
 			items, err := a.queryRoles(ctx, userIDs...)
 			if err != nil {
@@ -98,9 +97,9 @@ func (a *User) fillSchemaUsers(ctx context.Context, items []*user.UserSchema, op
 	return nil
 }
 
-func (a *User) queryRoles(ctx context.Context, userIDs ...string) (entity.UserRoles, error) {
-	var list entity.UserRoles
-	result := entity.GetUserRoleDB(ctx, a.db).Where("user_id IN(?)", userIDs).Find(&list)
+func (a *User) queryRoles(ctx context.Context, userIDs ...string) (gorm.UserRoles, error) {
+	var list gorm.UserRoles
+	result := gorm.GetUserRoleDB(ctx, a.db).Where("user_id IN(?)", userIDs).Find(&list)
 	if err := result.Error; err != nil {
 		return nil, errors.WithStack(err)
 	}

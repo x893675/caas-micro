@@ -1,4 +1,4 @@
-package entity
+package gorm
 
 import (
 	"caas-micro/proto/user"

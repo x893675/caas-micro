@@ -6,8 +6,6 @@ import (
 
 	// gorm存储注入
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	//_ "github.com/jinzhu/gorm/dialects/postgres"
-	//_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 // Config 配置参数
@@ -19,28 +17,6 @@ type Config struct {
 	MaxOpenConns int
 	MaxIdleConns int
 }
-
-// New 创建DB实例
-//func New(c *Config) (*DB, error) {
-//	db, err := gorm.Open(c.DBType, c.DSN)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	if c.Debug {
-//		db = db.Debug()
-//	}
-//
-//	err = db.DB().Ping()
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	db.DB().SetMaxIdleConns(c.MaxIdleConns)
-//	db.DB().SetMaxOpenConns(c.MaxOpenConns)
-//	db.DB().SetConnMaxLifetime(time.Duration(c.MaxLifetime) * time.Second)
-//	return &DB{db}, nil
-//}
 
 func NewDB() (*DB, error) {
 	c := &Config{
@@ -64,6 +40,9 @@ func NewDB() (*DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	SetTablePrefix("g_")
+	autoMigrate(db)
 
 	db.DB().SetMaxIdleConns(c.MaxIdleConns)
 	db.DB().SetMaxOpenConns(c.MaxOpenConns)
@@ -134,4 +113,17 @@ func (d *DB) Check(db *igorm.DB) (bool, error) {
 		return false, err
 	}
 	return count > 0, nil
+}
+
+// AutoMigrate 自动映射数据表
+func autoMigrate(db *igorm.DB) error {
+	return db.AutoMigrate(
+		new(User),
+		new(UserRole),
+		new(Role),
+		new(RoleMenu),
+		new(Menu),
+		new(MenuAction),
+		new(MenuResource),
+	).Error
 }

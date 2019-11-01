@@ -1,8 +1,7 @@
-package entity
+package gorm
 
 import (
 	icontext "caas-micro/internal/app/user/context"
-	"caas-micro/internal/app/user/model/impl/gorm"
 	"caas-micro/pkg/util"
 	"context"
 	"fmt"
@@ -38,14 +37,14 @@ func (Model) TableName(name string) string {
 func toString(v interface{}) string {
 	return util.JSONMarshalToString(v)
 }
-func getDBWithModel(ctx context.Context, defDB *gorm.DB, m interface{}) *gorm.DB {
-	return gorm.Wrap(getDB(ctx, defDB).Model(m))
+func getDBWithModel(ctx context.Context, defDB *DB, m interface{}) *DB {
+	return Wrap(getDB(ctx, defDB).Model(m))
 }
 
-func getDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
+func getDB(ctx context.Context, defDB *DB) *DB {
 	trans, ok := icontext.FromTrans(ctx)
 	if ok {
-		db, ok := trans.(*gorm.DB)
+		db, ok := trans.(*DB)
 		if ok {
 			return db
 		}
