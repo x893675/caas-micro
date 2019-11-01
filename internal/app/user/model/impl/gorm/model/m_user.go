@@ -1,21 +1,21 @@
-package gorm
+package model
 
 import (
+	"caas-micro/internal/app/user/model/impl/gorm"
 	"caas-micro/internal/app/user/model/impl/gorm/entity"
-	"caas-micro/internal/app/user/pkg/gormplus"
 	"caas-micro/pkg/errors"
 	"caas-micro/proto/user"
 	"context"
 )
 
 // NewUser 创建用户存储实例
-func NewUser(db *gormplus.DB) *User {
+func NewUser(db *gorm.DB) *User {
 	return &User{db}
 }
 
 // User 用户存储
 type User struct {
-	db *gormplus.DB
+	db *gorm.DB
 }
 
 func (a *User) getQueryOption(opts ...user.UserQueryOptions) user.UserQueryOptions {

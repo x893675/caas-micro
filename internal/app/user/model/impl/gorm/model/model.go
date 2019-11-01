@@ -1,16 +1,15 @@
-package gorm
+package model
 
 import (
 	icontext "caas-micro/internal/app/user/context"
-	"caas-micro/internal/app/user/pkg/gormplus"
+	gorm2 "caas-micro/internal/app/user/model/impl/gorm"
 	"caas-micro/proto/user"
 	"context"
-	"github.com/google/wire"
 	"github.com/jinzhu/gorm"
 )
 
 // ExecTrans 执行事务
-func ExecTrans(ctx context.Context, db *gormplus.DB, fn func(context.Context) error) error {
+func ExecTrans(ctx context.Context, db *gorm2.DB, fn func(context.Context) error) error {
 	if _, ok := icontext.FromTrans(ctx); ok {
 		return fn(ctx)
 	}
@@ -32,7 +31,7 @@ func ExecTrans(ctx context.Context, db *gormplus.DB, fn func(context.Context) er
 // WrapPageQuery 包装带有分页的查询
 func WrapPageQuery(db *gorm.DB, pp *user.PaginationParam, out interface{}) (*user.PaginationResult, error) {
 	if pp != nil {
-		total, err := gormplus.Wrap(db).FindPage(db, int(pp.PageIndex), int(pp.PageSize), out)
+		total, err := gorm2.Wrap(db).FindPage(db, int(pp.PageIndex), int(pp.PageSize), out)
 		if err != nil {
 			return nil, err
 		}
@@ -44,5 +43,3 @@ func WrapPageQuery(db *gorm.DB, pp *user.PaginationParam, out interface{}) (*use
 	result := db.Find(out)
 	return nil, result.Error
 }
-
-var ProviderSet = wire.NewSet(NewUser, NewTrans)

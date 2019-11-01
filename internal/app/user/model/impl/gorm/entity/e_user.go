@@ -1,19 +1,19 @@
 package entity
 
 import (
-	"caas-micro/internal/app/user/pkg/gormplus"
+	"caas-micro/internal/app/user/model/impl/gorm"
 	"caas-micro/proto/user"
 	"context"
 	"github.com/golang/protobuf/ptypes"
 )
 
 // GetUserDB 获取用户存储
-func GetUserDB(ctx context.Context, defDB *gormplus.DB) *gormplus.DB {
+func GetUserDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
 	return getDBWithModel(ctx, defDB, User{})
 }
 
 // GetUserRoleDB 获取用户角色关联存储
-func GetUserRoleDB(ctx context.Context, defDB *gormplus.DB) *gormplus.DB {
+func GetUserRoleDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
 	return getDBWithModel(ctx, defDB, UserRole{})
 }
 

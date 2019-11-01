@@ -25,10 +25,6 @@ func NewUserServer(a auth.AuthService, user model.IUser) (*UserServer, error) {
 	}, nil
 }
 
-func (u *UserServer) MigrateDB() error {
-
-}
-
 func (u *UserServer) Query(ctx context.Context, req *user.QueryRequest, rsp *user.QueryResult) error {
 	fmt.Println("in user srv query: ", req.UserName)
 

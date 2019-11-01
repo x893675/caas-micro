@@ -1,7 +1,7 @@
 package model
 
 import (
-	"caas-micro/internal/app/user/model/impl/gorm"
+	imodel "caas-micro/internal/app/user/model/impl/gorm/model"
 	"caas-micro/proto/user"
 	"context"
 	"github.com/google/wire"
@@ -28,5 +28,5 @@ type IUser interface {
 }
 
 var (
-	ProviderProductionSet = wire.NewSet(gorm.ProviderSet, wire.Bind(new(IUser), new(*gorm.User)))
+	ProviderProductionSet = wire.NewSet(imodel.ProviderSet, wire.Bind(new(IUser), new(*imodel.User)))
 )

@@ -1,26 +1,26 @@
 package entity
 
 import (
-	"caas-micro/internal/app/user/pkg/gormplus"
+	//"caas-micro/internal/app/user/model/impl/gorm"
 	"caas-micro/proto/user"
-	"context"
+	//"context"
 	"github.com/golang/protobuf/ptypes"
 )
 
-// GetMenuDB 获取菜单存储
-func GetMenuDB(ctx context.Context, defDB *gormplus.DB) *gormplus.DB {
-	return getDBWithModel(ctx, defDB, Menu{})
-}
-
-// GetMenuActionDB 获取菜单动作存储
-func GetMenuActionDB(ctx context.Context, defDB *gormplus.DB) *gormplus.DB {
-	return getDBWithModel(ctx, defDB, MenuAction{})
-}
-
-// GetMenuResourceDB 获取菜单资源存储
-func GetMenuResourceDB(ctx context.Context, defDB *gormplus.DB) *gormplus.DB {
-	return getDBWithModel(ctx, defDB, MenuResource{})
-}
+//// GetMenuDB 获取菜单存储
+//func GetMenuDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
+//	return getDBWithModel(ctx, defDB, Menu{})
+//}
+//
+//// GetMenuActionDB 获取菜单动作存储
+//func GetMenuActionDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
+//	return getDBWithModel(ctx, defDB, MenuAction{})
+//}
+//
+//// GetMenuResourceDB 获取菜单资源存储
+//func GetMenuResourceDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
+//	return getDBWithModel(ctx, defDB, MenuResource{})
+//}
 
 // SchemaMenu 菜单对象
 type SchemaMenu user.MenuSchema
