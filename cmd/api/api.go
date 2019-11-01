@@ -26,7 +26,7 @@ func main() {
 		web.Name(SERVICENAME),
 	)
 
-	service.Init(
+	_ = service.Init(
 		web.Address(WEBADDR),
 	)
 

@@ -7,6 +7,8 @@ package main
 
 import (
 	"caas-micro/internal/app/user"
+	"caas-micro/internal/app/user/model/impl/gorm"
+	"caas-micro/internal/app/user/pkg/gormplus"
 	"caas-micro/internal/app/user/rpcclients"
 	"github.com/google/wire"
 )
@@ -18,7 +20,12 @@ func CreateUserServer() (*user.UserServer, error) {
 	if err != nil {
 		return nil, err
 	}
-	userServer, err := user.NewUserServer(authService)
+	db, err := gormplus.NewDB()
+	if err != nil {
+		return nil, err
+	}
+	gormUser := gorm.NewUser(db)
+	userServer, err := user.NewUserServer(authService, gormUser)
 	if err != nil {
 		return nil, err
 	}

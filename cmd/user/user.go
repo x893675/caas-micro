@@ -35,7 +35,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	user.RegisterUserHandler(service.Server(), userServer)
+	_ = user.RegisterUserHandler(service.Server(), userServer)
 	// Run server
 	if err := service.Run(); err != nil {
 		log.Fatal(err)

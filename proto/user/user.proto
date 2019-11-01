@@ -8,37 +8,34 @@ service User {
 	rpc Query(QueryRequest) returns (QueryResult) {};
 }
 
-message Request {
-	string username = 1;
-    string password = 2;
-}
-
-message Response {
-	string msg = 1;
-}
-
 message QueryRequest{
 	string UserName = 1;
 	string LikeUserName = 2;
 	string LikeRealName = 3;
 	string Email = 4;
-	int32 Status = 5;
+	sint64 Status = 5;
 	repeated string RoleIDS = 6;
+	UserQueryOptions QueryOpt = 7;
 }
 
 message QueryResult{
-	repeated UserEntity Data = 1;
+	repeated UserSchema Data = 1;
 	PaginationResult PageResult = 2;
 }
 
-message UserEntity{
+message UserQueryOptions{
+	bool IncludeRoles = 1;
+	PaginationParam PageParam = 2;
+}
+
+message UserSchema{
 	string RecordID = 1;
 	string UserName = 2;
 	string RealName = 3;
 	string Password = 4;
 	string Phone = 5;
 	string Email = 6;
-	int32 Status = 7;
+	sint64 Status = 7;
 	string Creator = 8;
 	google.protobuf.Timestamp CreatedAt = 9;
 	repeated UserRole Roles = 10;
@@ -49,5 +46,90 @@ message UserRole{
 }
 
 message PaginationResult{
-	int64 Total = 1;
+	sint64 Total = 1;
+}
+
+message PaginationParam{
+	sint64 PageIndex = 1;
+	sint64 PageSize = 2;
+}
+
+message RoleSchema{
+	string RecordID = 1;
+	string Name = 2;
+	sint64 Sequence = 3;
+	string Memo = 4;
+	string Creator = 5;
+	google.protobuf.Timestamp CreatedAt = 6;
+	repeated RoleMenu Menus = 7;
+}
+
+message RoleMenu{
+	string MenuID = 1;
+	repeated string Actions = 2;
+	repeated string Resources =3;
+}
+
+message RoleQueryParam{
+	repeated string RecordIDs = 1;
+	string Name = 2;
+	string LikeName =3;
+	string UserID = 4;
+	RoleQueryOptions QueryOpt = 5;
+}
+
+message RoleQueryOptions{
+	bool IncludeMenus = 1;
+	PaginationParam PageParam = 2;
+}
+
+message RoleQueryResult{
+	repeated RoleSchema Data = 1;
+	PaginationResult PageResult = 2;
+}
+
+message MenuSchema{
+	string RecordID = 1;
+	string Name = 2;
+	sint64 Sequence = 3;
+	string Icon = 4;
+	string Router = 5;
+	sint64 Hidden = 6;
+	string ParentID = 7;
+	string ParentPath = 8;
+	string Creator = 9;
+	google.protobuf.Timestamp CreatedAt = 10;
+	repeated MenuAction Actions = 11;
+	repeated MenuResource Resources = 12;
+}
+
+message MenuAction{
+	string Code = 1;
+	string Name = 2;
+}
+
+message MenuResource{
+	string Code = 1;
+	string Name = 2;
+	string Method = 3;
+	string Path = 4;
+}
+
+message MenuQueryParam{
+	repeated string RecordIDs = 1;
+	string LikeName = 2;
+	string ParentID = 3;
+	string PrefixParentPath = 4;
+	sint64 Hidden = 5;
+}
+
+message MenuQueryOptions{
+	bool IncludeActions = 1;
+	bool IncludeResources = 2;
+	PaginationParam PageParam = 3;
+}
+
+message MenuQueryResult{
+	repeated MenuSchema Menus = 1;
+	PaginationResult PageResult = 2;
 }

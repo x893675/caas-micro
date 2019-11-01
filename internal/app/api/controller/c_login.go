@@ -20,29 +20,29 @@ func NewLoginController(auth auth.AuthService) *LoginController {
 	}
 }
 
-func (s *LoginController) Anything(c *gin.Context) {
-	log.Print("Received Say.Anything API request")
-	c.JSON(200, map[string]string{
-		"message": "Hi, this is the Greeter API",
-	})
-}
-
-func (s *LoginController) Hello(c *gin.Context) {
-	log.Print("Received Say.Hello API request")
-
-	name := c.Param("name")
-
-	response, err := s.AuthSvc.DestroyToken(context.TODO(), &auth.Request{
-		Username: name,
-		Password: name,
-	})
-
-	if err != nil {
-		c.JSON(500, err)
-	}
-
-	c.JSON(200, response)
-}
+//func (s *LoginController) Anything(c *gin.Context) {
+//	log.Print("Received Say.Anything API request")
+//	c.JSON(200, map[string]string{
+//		"message": "Hi, this is the Greeter API",
+//	})
+//}
+//
+//func (s *LoginController) Hello(c *gin.Context) {
+//	log.Print("Received Say.Hello API request")
+//
+//	name := c.Param("name")
+//
+//	response, err := s.AuthSvc.DestroyToken(context.TODO(), &auth.Request{
+//		Username: name,
+//		Password: name,
+//	})
+//
+//	if err != nil {
+//		c.JSON(500, err)
+//	}
+//
+//	c.JSON(200, response)
+//}
 
 func (s *LoginController) Login(c *gin.Context) {
 	log.Print("Received api.Login request")
