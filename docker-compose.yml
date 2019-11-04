@@ -37,6 +37,7 @@ services:
       dockerfile: "build/user/Dockerfile"
     command:
       - --registry_address=consul:8500
+    restart: always
     depends_on:
       - consul
       - mysql
@@ -44,5 +45,11 @@ services:
     image: mysql:latest
     command:
       - --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - "/opt/mysql:/var/lib/mysql"
     environment:
-      - MYSQL_ROOT_PASSWORD: 123456
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=user
