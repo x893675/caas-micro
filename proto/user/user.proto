@@ -130,6 +130,20 @@ message MenuQueryOptions{
 }
 
 message MenuQueryResult{
-	repeated MenuSchema Menus = 1;
+	repeated MenuSchema Data = 1;
 	PaginationResult PageResult = 2;
+}
+
+message MenuTree{
+	string RecordID = 1;
+	string Name = 2;
+	sint64 Sequence = 3;
+	string Icon = 4;
+	string Router = 5;
+	sint64 Hidden = 6;
+	string ParentID = 7;
+	string ParentPath = 8;
+	repeated MenuAction Actions = 9;
+	repeated MenuResource Resources = 10;
+	repeated MenuTree Children = 11;
 }

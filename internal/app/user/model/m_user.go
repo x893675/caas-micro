@@ -28,5 +28,7 @@ type IUser interface {
 }
 
 var (
-	ProviderProductionSet = wire.NewSet(imodel.ProviderSet, wire.Bind(new(IUser), new(*imodel.User)))
+	ProviderProductionSet = wire.NewSet(imodel.ProviderSet, wire.Bind(new(IUser), new(*imodel.User)),
+		wire.Bind(new(IRole), new(*imodel.Role)), wire.Bind(new(IMenu), new(*imodel.Menu)),
+		wire.Bind(new(ITrans), new(*imodel.Trans)))
 )

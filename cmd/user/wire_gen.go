@@ -25,7 +25,8 @@ func CreateUserServer() (*user.UserServer, error) {
 		return nil, err
 	}
 	modelUser := model.NewUser(db)
-	userServer, err := user.NewUserServer(authService, modelUser)
+	role := model.NewRole(db)
+	userServer, err := user.NewUserServer(authService, modelUser, role)
 	if err != nil {
 		return nil, err
 	}

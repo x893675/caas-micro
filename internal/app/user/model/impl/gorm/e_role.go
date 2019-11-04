@@ -2,19 +2,20 @@ package gorm
 
 import (
 	"caas-micro/proto/user"
+	"context"
 	"github.com/golang/protobuf/ptypes"
 	"strings"
 )
 
-//// GetRoleDB 获取角色存储
-//func GetRoleDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
-//	return getDBWithModel(ctx, defDB, Role{})
-//}
-//
-//// GetRoleMenuDB 获取角色菜单关联存储
-//func GetRoleMenuDB(ctx context.Context, defDB *gorm.DB) *gorm.DB {
-//	return getDBWithModel(ctx, defDB, RoleMenu{})
-//}
+// GetRoleDB 获取角色存储
+func GetRoleDB(ctx context.Context, defDB *DB) *DB {
+	return getDBWithModel(ctx, defDB, Role{})
+}
+
+// GetRoleMenuDB 获取角色菜单关联存储
+func GetRoleMenuDB(ctx context.Context, defDB *DB) *DB {
+	return getDBWithModel(ctx, defDB, RoleMenu{})
+}
 
 // SchemaRole 角色对象
 type SchemaRole user.RoleSchema

@@ -42,15 +42,15 @@ func NewDB() (*DB, error) {
 	}
 
 	SetTablePrefix("g_")
-	autoMigrate(db)
+	err = autoMigrate(db)
+	if err != nil {
+		return nil, err
+	}
 
 	db.DB().SetMaxIdleConns(c.MaxIdleConns)
 	db.DB().SetMaxOpenConns(c.MaxOpenConns)
 	db.DB().SetConnMaxLifetime(time.Duration(c.MaxLifetime) * time.Second)
 
-	if err != nil {
-		return nil, err
-	}
 	return &DB{db}, nil
 }
 
