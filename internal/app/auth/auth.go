@@ -115,6 +115,14 @@ func (a *AuthServer) Verify(ctx context.Context, req *auth.LoginRequest, rsp *au
 
 	userid := response.Data[0].RecordID
 	log.Println("in verify, password is ", response.Data[0].Password)
+
+	item := response.Data[0]
+	if item.Password != util.SHA1HashString(req.Password) {
+		return errors.ErrInvalidPassword
+	} else if item.Status != 1 {
+		return errors.ErrUserDisable
+	}
+
 	err = a.generateToken(ctx, userid, rsp)
 	if err != nil {
 		fmt.Println(err.Error())
