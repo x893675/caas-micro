@@ -103,9 +103,9 @@ func NewUserServer(a auth.AuthService, user model.IUser, role model.IRole) (*Use
 func (u *UserServer) Query(ctx context.Context, req *user.QueryRequest, rsp *user.QueryResult) error {
 	fmt.Println("in user srv query: ", req.UserName)
 
-	if req.UserName != "hanamichi" {
-		return nil
-	}
+	//if req.UserName != "hanamichi" {
+	//	return nil
+	//}
 	result, err := u.userModel.Query(ctx, *req)
 	if err != nil {
 		return err
