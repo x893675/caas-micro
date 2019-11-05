@@ -5,6 +5,7 @@ import (
 	"caas-micro/pkg/errors"
 	"caas-micro/proto/user"
 	"context"
+	"fmt"
 )
 
 // NewUser 创建用户存储实例
@@ -154,6 +155,9 @@ func (a *User) Update(ctx context.Context, recordID string, item user.UserSchema
 		}
 
 		clist, dlist, ulist := a.compareUpdateRole(roles, sitem.ToUserRoles())
+		fmt.Println(clist)
+		fmt.Println(dlist)
+		fmt.Println(ulist)
 		for _, item := range clist {
 			result := gorm.GetUserRoleDB(ctx, a.db).Create(item)
 			if err := result.Error; err != nil {
