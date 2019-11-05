@@ -138,3 +138,35 @@ func (a *UserController) Delete(c *gin.Context) {
 	//}
 	//ginplus.ResOK(c)
 }
+
+// Get 查询指定数据
+// Get 查询指定数据
+// @Summary 查询指定数据
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param id path string true "记录ID"
+// @Success 200 schema.User
+// @Failure 401 schema.HTTPError "{error:{code:0,message:未授权}}"
+// @Failure 404 schema.HTTPError "{error:{code:0,message:资源不存在}}"
+// @Failure 500 schema.HTTPError "{error:{code:0,message:服务器错误}}"
+// @Router GET /api/v1/users/{id}
+func (a *UserController) Get(c *gin.Context) {
+	item, err := a.UserSvc.Get(context.TODO(), &user.GetUserRequest{
+		Uid: c.Param("id"),
+		QueryOpt: &user.UserQueryOptions{
+			IncludeRoles: true,
+		},
+	})
+	if err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+	ginplus.ResSuccess(c, item)
+	//item, err := a.UserBll.Get(ginplus.NewContext(c), c.Param("id"), schema.UserQueryOptions{
+	//	IncludeRoles: true,
+	//})
+	//if err != nil {
+	//	ginplus.ResError(c, err)
+	//	return
+	//}
+	//ginplus.ResSuccess(c, item.CleanSecure())
+}

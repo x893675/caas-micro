@@ -220,6 +220,33 @@ func (u *UserServer) Delete(ctx context.Context, req *user.DeleteUserRequest, rs
 	return nil
 }
 
+func (u *UserServer) Get(ctx context.Context, req *user.GetUserRequest, rsp *user.UserSchema) error {
+
+	item, err := u.userModel.Get(ctx, req.Uid, user.UserQueryOptions{
+		IncludeRoles: req.QueryOpt.IncludeRoles,
+	})
+	if err != nil {
+		return err
+	} else if item == nil {
+		return errors.ErrNotFound
+	}
+
+	rsp.RecordID = item.RecordID
+	rsp.UserName = item.UserName
+	//rsp.Password = req.Password
+	rsp.Email = item.Email
+	rsp.Roles = item.Roles
+	rsp.Status = item.Status
+	//item, err := a.UserModel.Get(ctx, recordID, opts...)
+	//if err != nil {
+	//	return nil, err
+	//} else if item == nil {
+	//	return nil, errors.ErrNotFound
+	//}
+	//return item, nil
+	return nil
+}
+
 func (u *UserServer) checkUserName(ctx context.Context, userName string) error {
 	result, err := u.userModel.Query(ctx, user.QueryRequest{
 		UserName: userName,

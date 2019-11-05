@@ -9,6 +9,7 @@ service User {
 	rpc QueryShow(QueryRequest) returns (UserShowQueryResult) {};
 	rpc Create(UserSchema) returns (UserSchema) {};
 	rpc Delete(DeleteUserRequest) returns (NullResult) {};
+	rpc Get(GetUserRequest) returns (UserSchema) {};
 }
 
 message QueryRequest{
@@ -29,6 +30,11 @@ message QueryResult{
 message UserQueryOptions{
 	bool IncludeRoles = 1;
 	PaginationParam PageParam = 2;
+}
+
+message GetUserRequest{
+	string Uid = 1;
+	UserQueryOptions QueryOpt = 2;
 }
 
 message DeleteUserRequest{
