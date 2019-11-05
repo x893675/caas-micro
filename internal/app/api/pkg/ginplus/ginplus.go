@@ -1,8 +1,10 @@
 package ginplus
 
 import (
+	"caas-micro/internal/app/api/schema"
 	"caas-micro/pkg/errors"
 	"caas-micro/pkg/util"
+	"caas-micro/proto/user"
 	"fmt"
 	"net/http"
 	"strings"
@@ -65,6 +67,22 @@ func ResSuccess(c *gin.Context, v interface{}) {
 	ResJSON(c, http.StatusOK, v)
 }
 
+// ResPage 响应分页数据
+func ResPage(c *gin.Context, v interface{}, pr *user.PaginationResult) {
+	list := schema.HTTPList{
+		List: v,
+		Pagination: &schema.HTTPPagination{
+			Current:  GetPageIndex(c),
+			PageSize: GetPageSize(c),
+		},
+	}
+	if pr != nil {
+		list.Pagination.Total = int(pr.Total)
+	}
+
+	ResSuccess(c, list)
+}
+
 // ParseJSON 解析请求JSON
 func ParseJSON(c *gin.Context, obj interface{}) error {
 	if err := c.ShouldBindJSON(obj); err != nil {
@@ -122,4 +140,37 @@ func ResError(c *gin.Context, err error, status ...int) {
 	}
 
 	ResJSON(c, statusCode, HTTPError{Error: errItem})
+}
+
+// GetPageIndex 获取分页的页索引
+func GetPageIndex(c *gin.Context) int {
+	defaultVal := 1
+	if v := c.Query("current"); v != "" {
+		if iv := util.S(v).DefaultInt(defaultVal); iv > 0 {
+			return iv
+		}
+	}
+	return defaultVal
+}
+
+// GetPageSize 获取分页的页大小(最大50)
+func GetPageSize(c *gin.Context) int {
+	defaultVal := 10
+	if v := c.Query("pageSize"); v != "" {
+		if iv := util.S(v).DefaultInt(defaultVal); iv > 0 {
+			if iv > 50 {
+				iv = 50
+			}
+			return iv
+		}
+	}
+	return defaultVal
+}
+
+// GetPaginationParam 获取分页查询参数
+func GetPaginationParam(c *gin.Context) *user.PaginationParam {
+	return &user.PaginationParam{
+		PageIndex: int64(GetPageIndex(c)),
+		PageSize:  int64(GetPageSize(c)),
+	}
 }

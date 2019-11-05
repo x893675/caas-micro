@@ -36,6 +36,7 @@ var _ server.Option
 
 type UserService interface {
 	Query(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResult, error)
+	QueryShow(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*UserShowQueryResult, error)
 }
 
 type userService struct {
@@ -66,15 +67,27 @@ func (c *userService) Query(ctx context.Context, in *QueryRequest, opts ...clien
 	return out, nil
 }
 
+func (c *userService) QueryShow(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*UserShowQueryResult, error) {
+	req := c.c.NewRequest(c.name, "User.QueryShow", in)
+	out := new(UserShowQueryResult)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
 	Query(context.Context, *QueryRequest, *QueryResult) error
+	QueryShow(context.Context, *QueryRequest, *UserShowQueryResult) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) error {
 	type user interface {
 		Query(ctx context.Context, in *QueryRequest, out *QueryResult) error
+		QueryShow(ctx context.Context, in *QueryRequest, out *UserShowQueryResult) error
 	}
 	type User struct {
 		user
@@ -89,4 +102,8 @@ type userHandler struct {
 
 func (h *userHandler) Query(ctx context.Context, in *QueryRequest, out *QueryResult) error {
 	return h.UserHandler.Query(ctx, in, out)
+}
+
+func (h *userHandler) QueryShow(ctx context.Context, in *QueryRequest, out *UserShowQueryResult) error {
+	return h.UserHandler.QueryShow(ctx, in, out)
 }

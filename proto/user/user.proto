@@ -6,6 +6,7 @@ package user;
 
 service User {
 	rpc Query(QueryRequest) returns (QueryResult) {};
+	rpc QueryShow(QueryRequest) returns (UserShowQueryResult) {};
 }
 
 message QueryRequest{
@@ -52,6 +53,22 @@ message PaginationResult{
 message PaginationParam{
 	sint64 PageIndex = 1;
 	sint64 PageSize = 2;
+}
+
+message UserShow{
+	string RecordID = 1;
+	string UserName = 2;
+	string RealName = 3;
+	string Phone = 4;
+	string Email = 5;
+	sint64 Status = 6;
+	google.protobuf.Timestamp CreatedAt = 7;
+	repeated RoleSchema Roles = 8;
+}
+
+message UserShowQueryResult{
+	repeated UserShow Data = 1;
+	PaginationResult PageResult = 2;
 }
 
 message RoleSchema{

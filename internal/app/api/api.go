@@ -8,11 +8,13 @@ import (
 
 type ApiApplication struct {
 	LoginCtl *controller.LoginController
+	UserCtl  *controller.UserController
 }
 
-func NewApiApplication(loginctl *controller.LoginController) *ApiApplication {
+func NewApiApplication(loginctl *controller.LoginController, userctl *controller.UserController) *ApiApplication {
 	return &ApiApplication{
 		LoginCtl: loginctl,
+		UserCtl:  userctl,
 	}
 }
 

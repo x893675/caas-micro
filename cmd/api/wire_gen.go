@@ -17,7 +17,9 @@ import (
 func CreateApiApplication() *api.ApiApplication {
 	authService := rpcclients.NewAuthSrvClient()
 	loginController := controller.NewLoginController(authService)
-	apiApplication := api.NewApiApplication(loginController)
+	userService := rpcclients.NewUserSrvClient()
+	userController := controller.NewUserController(userService)
+	apiApplication := api.NewApiApplication(loginController, userController)
 	return apiApplication
 }
 

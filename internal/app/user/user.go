@@ -128,4 +128,90 @@ func (u *UserServer) Query(ctx context.Context, req *user.QueryRequest, rsp *use
 	return nil
 }
 
+func (u *UserServer) QueryShow(ctx context.Context, req *user.QueryRequest, rsp *user.UserShowQueryResult) error {
+	//opts := user.UserQueryOptions{
+	//	IncludeRoles: req.QueryOpt.IncludeRoles,
+	//	PageParam: req.QueryOpt.PageParam,
+	//}
+	userResult, err := u.userModel.Query(ctx, *req, user.UserQueryOptions{
+		IncludeRoles: req.QueryOpt.IncludeRoles,
+		PageParam:    req.QueryOpt.PageParam,
+	})
+	if err != nil {
+		return err
+	} else if userResult == nil {
+		return nil
+	}
+
+	//result := &user.UserShowQueryResult{
+	//	PageResult: userResult.PageResult,
+	//}
+	rsp.PageResult = userResult.PageResult
+	if len(userResult.Data) == 0 {
+		return nil
+	}
+	roleResult, err := u.roleModel.Query(ctx, user.RoleQueryParam{
+		RecordIDs: ToRoleIDs(userResult.Data),
+	})
+	if err != nil {
+		return err
+	}
+	rsp.Data = userToUserShow(userResult.Data, rolesToMap(roleResult.Data))
+	return nil
+	//result.Data = userResult.Data.ToUserShows(roleResult.Data.ToMap())
+	//return result, nil
+}
+
+func ToRoleIDs(a []*user.UserSchema) []string {
+	var roleIDs []string
+	for _, item := range a {
+		roleIDs = append(roleIDs, roleToRoleIDs(item.Roles)...)
+	}
+	return roleIDs
+}
+
+// ToRoleIDs 转换为角色ID列表
+func roleToRoleIDs(a []*user.UserRole) []string {
+	list := make([]string, len(a))
+	for i, item := range a {
+		list[i] = item.RoleID
+	}
+	return list
+}
+
+func rolesToMap(a []*user.RoleSchema) map[string]*user.RoleSchema {
+	m := make(map[string]*user.RoleSchema)
+	for _, item := range a {
+		m[item.RecordID] = item
+	}
+	return m
+}
+
+func userToUserShow(a []*user.UserSchema, mroles map[string]*user.RoleSchema) []*user.UserShow {
+	list := make([]*user.UserShow, len(a))
+
+	for i, item := range a {
+		showItem := &user.UserShow{
+			RecordID:  item.RecordID,
+			RealName:  item.RealName,
+			UserName:  item.UserName,
+			Email:     item.Email,
+			Phone:     item.Phone,
+			Status:    item.Status,
+			CreatedAt: item.CreatedAt,
+		}
+
+		var roles []*user.RoleSchema
+		for _, roleID := range roleToRoleIDs(item.Roles) {
+			if v, ok := mroles[roleID]; ok {
+				roles = append(roles, v)
+			}
+		}
+		showItem.Roles = roles
+		list[i] = showItem
+	}
+
+	return list
+}
+
 var ProviderSet = wire.NewSet(NewUserServer)
