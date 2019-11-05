@@ -159,6 +159,7 @@ func (a *User) Update(ctx context.Context, recordID string, item user.UserSchema
 		fmt.Println(dlist)
 		fmt.Println(ulist)
 		for _, item := range clist {
+			fmt.Println(item.UserID, item.RoleID)
 			result := gorm.GetUserRoleDB(ctx, a.db).Create(item)
 			if err := result.Error; err != nil {
 				return errors.WithStack(err)
