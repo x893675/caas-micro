@@ -3,11 +3,10 @@ package controller
 import (
 	"caas-micro/internal/app/api/pkg/ginplus"
 	"caas-micro/pkg/errors"
-	"caas-micro/pkg/util"
 	"caas-micro/proto/user"
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"strings"
 )
 
 type UserController struct {
@@ -46,22 +45,27 @@ func (a *UserController) Query(c *gin.Context) {
 // @Failure 500 schema.HTTPError "{error:{code:0,message:服务器错误}}"
 // @Router GET /api/v1/users?q=page
 func (a *UserController) QueryPage(c *gin.Context) {
+	fmt.Println("in querypage 1")
 	var params user.QueryRequest
-	params.LikeUserName = c.Query("user_name")
-	params.LikeRealName = c.Query("real_name")
-	params.Email = c.Query("email")
-	if v := util.S(c.Query("status")).DefaultInt64(0); v > 0 {
-		params.Status = v
-	}
-
-	if v := c.Query("role_ids"); v != "" {
-		params.RoleIDS = strings.Split(v, ",")
-	}
+	//params.LikeUserName = c.Query("user_name")
+	//params.LikeRealName = c.Query("real_name")
+	//params.Email = c.Query("email")
+	//if v := util.S(c.Query("status")).DefaultInt64(0); v > 0 {
+	//	params.Status = v
+	//}
+	//
+	//if v := c.Query("role_ids"); v != "" {
+	//	params.RoleIDS = strings.Split(v, ",")
+	//}
 
 	params.QueryOpt.IncludeRoles = true
-	params.QueryOpt.PageParam = ginplus.GetPaginationParam(c)
+	params.QueryOpt.PageParam.PageIndex = 1
+	params.QueryOpt.PageParam.PageSize = 10
+	//params.QueryOpt.PageParam = ginplus.GetPaginationParam(c)
+	fmt.Println("in querypage 2")
 	result, err := a.UserSvc.QueryShow(context.TODO(), &params)
 	if err != nil {
+		fmt.Println("err is ", err.Error())
 		ginplus.ResError(c, err)
 		return
 	}
