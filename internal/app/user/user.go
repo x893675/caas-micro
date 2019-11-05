@@ -179,6 +179,8 @@ func (u *UserServer) Create(ctx context.Context, req *user.UserSchema, rsp *user
 		return err
 	}
 
+	fmt.Println("role id is ", req.Roles[0].RoleID)
+
 	req.Password = util.SHA1HashString(req.Password)
 	req.RecordID = util.MustUUID()
 	err = u.userModel.Create(ctx, *req)
@@ -187,7 +189,7 @@ func (u *UserServer) Create(ctx context.Context, req *user.UserSchema, rsp *user
 	}
 	rsp.RecordID = req.RecordID
 	rsp.UserName = req.UserName
-	rsp.Password = req.Password
+	//rsp.Password = req.Password
 	rsp.Email = req.Email
 	rsp.Roles = req.Roles
 	rsp.Status = req.Status

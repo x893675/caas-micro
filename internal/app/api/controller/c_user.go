@@ -103,7 +103,7 @@ func (a *UserController) Create(c *gin.Context) {
 		Status:   int64(item.Status),
 		Roles:    item.Roles,
 	}
-
+	fmt.Println("role id is ", param.Roles[0].RoleID)
 	nitem, err := a.UserSvc.Create(context.TODO(), param)
 	if err != nil {
 		ginplus.ResError(c, err)
