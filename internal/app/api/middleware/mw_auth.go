@@ -14,9 +14,8 @@ func UserAuthMiddleware(a auth.AuthService, skipper ...SkipperFunc) gin.HandlerF
 	return func(c *gin.Context) {
 		var userID string
 		if t := ginplus.GetToken(c); t != "" {
-			resp, err := a.VertifyToken(context.TODO(), &auth.Request{
-				Username: t,
-				Password: t,
+			resp, err := a.VertifyToken(context.TODO(), &auth.TokenString{
+				Token: t,
 			})
 			if err != nil {
 				if err.Error() == errors.ErrInvalidToken.Error() {
@@ -26,7 +25,7 @@ func UserAuthMiddleware(a auth.AuthService, skipper ...SkipperFunc) gin.HandlerF
 				ginplus.ResError(c, err)
 				return
 			}
-			userID = resp.GetMsg()
+			userID = resp.GetUid()
 		}
 
 		if len(skipper) > 0 && skipper[0](c) {

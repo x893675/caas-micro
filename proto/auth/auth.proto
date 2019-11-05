@@ -7,7 +7,7 @@ service Auth {
 	rpc Verify(LoginRequest) returns (Token) {};
 	//rpc GenerateToken(Request) returns (Response) {};
 	rpc DestroyToken(Request) returns (Response) {};
-	rpc VertifyToken(Request) returns (Response) {};
+	rpc VertifyToken(TokenString) returns (VerifyResponse) {};
 }
 
 message LoginRequest{
@@ -25,6 +25,13 @@ message Token{
 // 	string userid =1;
 // }
 
+message TokenString{
+	string Token = 1;
+}
+
+message VerifyResponse{
+	string Uid = 1;
+}
 message Request {
 	string username = 1;
     string password = 2;

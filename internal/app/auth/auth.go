@@ -131,13 +131,19 @@ func (a *AuthServer) Verify(ctx context.Context, req *auth.LoginRequest, rsp *au
 	return nil
 }
 
-func (a *AuthServer) VertifyToken(ctx context.Context, req *auth.Request, rsp *auth.Response) error {
+func (a *AuthServer) VertifyToken(ctx context.Context, req *auth.TokenString, rsp *auth.VerifyResponse) error {
 	log.Println("in VertifyToken")
-	log.Println(req.Username)
-	log.Println(req.Password)
-	if req.Username == "test" && req.Password == "test" {
-		rsp.Msg = "userid"
-		return nil
+	log.Println(req.Token)
+
+	uid, err := a.auther.ParseUserID(req.Token)
+
+	if err != nil {
+		if err == auther.ErrInvalidToken {
+			return errors.ErrInvalidToken
+		}
+		return err
 	}
-	return errors.ErrInvalidToken
+
+	rsp.Uid = uid
+	return nil
 }
