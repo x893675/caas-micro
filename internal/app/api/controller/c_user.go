@@ -57,10 +57,16 @@ func (a *UserController) QueryPage(c *gin.Context) {
 	//if v := c.Query("role_ids"); v != "" {
 	//	params.RoleIDS = strings.Split(v, ",")
 	//}
-
-	params.QueryOpt.IncludeRoles = true
-	params.QueryOpt.PageParam.PageIndex = 1
-	params.QueryOpt.PageParam.PageSize = 10
+	var opt user.UserQueryOptions
+	opt.IncludeRoles = true
+	opt.PageParam = &user.PaginationParam{
+		PageIndex: 1,
+		PageSize:  10,
+	}
+	//params.QueryOpt.IncludeRoles = true
+	//params.QueryOpt.PageParam.PageIndex = 1
+	//params.QueryOpt.PageParam.PageSize = 10
+	params.QueryOpt = &opt
 	//params.QueryOpt.PageParam = ginplus.GetPaginationParam(c)
 	fmt.Println("in querypage 2")
 	result, err := a.UserSvc.QueryShow(context.TODO(), &params)
