@@ -155,10 +155,11 @@ func (a *User) Update(ctx context.Context, recordID string, item user.UserSchema
 		}
 
 		clist, dlist, ulist := a.compareUpdateRole(roles, sitem.ToUserRoles())
-		fmt.Println(clist)
-		fmt.Println(dlist)
-		fmt.Println(ulist)
+		//fmt.Println(clist)
+		//fmt.Println(dlist)
+		//fmt.Println(ulist)
 		for _, item := range clist {
+			item.UserID = recordID
 			fmt.Println(item.UserID, item.RoleID)
 			result := gorm.GetUserRoleDB(ctx, a.db).Create(item)
 			if err := result.Error; err != nil {
