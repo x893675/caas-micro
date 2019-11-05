@@ -2,6 +2,7 @@ package controller
 
 import (
 	"caas-micro/internal/app/api/pkg/ginplus"
+	"caas-micro/internal/app/api/schema"
 	"caas-micro/pkg/errors"
 	"caas-micro/proto/user"
 	"context"
@@ -76,4 +77,49 @@ func (a *UserController) QueryPage(c *gin.Context) {
 		return
 	}
 	ginplus.ResPage(c, result.Data, result.PageResult)
+}
+
+// Create 创建数据
+// @Summary 创建数据
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param body body schema.User true
+// @Success 200 schema.User
+// @Failure 400 schema.HTTPError "{error:{code:0,message:无效的请求参数}}"
+// @Failure 401 schema.HTTPError "{error:{code:0,message:未授权}}"
+// @Failure 500 schema.HTTPError "{error:{code:0,message:服务器错误}}"
+// @Router POST /api/v1/users
+func (a *UserController) Create(c *gin.Context) {
+	var item schema.CreateUserParam
+	if err := ginplus.ParseJSON(c, &item); err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+	param := &user.UserSchema{
+		UserName: item.UserName,
+		RealName: item.RealName,
+		Password: item.Password,
+		Phone:    item.Phone,
+		Email:    item.Email,
+		Status:   int64(item.Status),
+		Roles:    item.Roles,
+	}
+
+	nitem, err := a.UserSvc.Create(context.TODO(), param)
+	if err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+	ginplus.ResSuccess(c, nitem)
+	//var item schema.User
+	//if err := ginplus.ParseJSON(c, &item); err != nil {
+	//	ginplus.ResError(c, err)
+	//	return
+	//}
+	//
+	//nitem, err := a.UserBll.Create(ginplus.NewContext(c), item)
+	//if err != nil {
+	//	ginplus.ResError(c, err)
+	//	return
+	//}
+	//ginplus.ResSuccess(c, nitem.CleanSecure())
 }

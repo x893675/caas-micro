@@ -13,8 +13,8 @@ type IUser interface {
 	Query(ctx context.Context, params user.QueryRequest, opts ...user.UserQueryOptions) (*user.QueryResult, error)
 	//// 查询指定数据
 	//Get(ctx context.Context, recordID string, opts ...schema.UserQueryOptions) (*schema.User, error)
-	//// 创建数据
-	//Create(ctx context.Context, item schema.User) error
+	// 创建数据
+	Create(ctx context.Context, item user.UserSchema) error
 	//// 更新数据
 	//Update(ctx context.Context, recordID string, item schema.User) error
 	//// 删除数据

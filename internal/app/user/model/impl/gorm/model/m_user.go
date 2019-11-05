@@ -69,6 +69,39 @@ func (a *User) Query(ctx context.Context, params user.QueryRequest, opts ...user
 	return qr, nil
 }
 
+func (a *User) Create(ctx context.Context, item user.UserSchema) error {
+	return ExecTrans(ctx, a.db, func(ctx context.Context) error {
+		sitem := gorm.SchemaUser(item)
+		result := gorm.GetUserDB(ctx, a.db).Create(sitem.ToUser())
+		if err := result.Error; err != nil {
+			return errors.WithStack(err)
+		}
+
+		for _, eitem := range sitem.ToUserRoles() {
+			result := gorm.GetUserRoleDB(ctx, a.db).Create(eitem)
+			if err := result.Error; err != nil {
+				return errors.WithStack(err)
+			}
+		}
+		return nil
+	})
+	//return ExecTrans(ctx, a.db, func(ctx context.Context) error {
+	//	sitem := entity.SchemaUser(item)
+	//	result := entity.GetUserDB(ctx, a.db).Create(sitem.ToUser())
+	//	if err := result.Error; err != nil {
+	//		return errors.WithStack(err)
+	//	}
+	//
+	//	for _, eitem := range sitem.ToUserRoles() {
+	//		result := entity.GetUserRoleDB(ctx, a.db).Create(eitem)
+	//		if err := result.Error; err != nil {
+	//			return errors.WithStack(err)
+	//		}
+	//	}
+	//	return nil
+	//})
+}
+
 func (a *User) fillSchemaUsers(ctx context.Context, items []*user.UserSchema, opts ...user.UserQueryOptions) error {
 	opt := a.getQueryOption(opts...)
 

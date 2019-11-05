@@ -2,6 +2,8 @@ package user
 
 import (
 	"caas-micro/internal/app/user/model"
+	"caas-micro/pkg/errors"
+	"caas-micro/pkg/util"
 	"caas-micro/proto/auth"
 	"caas-micro/proto/user"
 	"context"
@@ -160,6 +162,77 @@ func (u *UserServer) QueryShow(ctx context.Context, req *user.QueryRequest, rsp 
 	return nil
 	//result.Data = userResult.Data.ToUserShows(roleResult.Data.ToMap())
 	//return result, nil
+}
+
+func (u *UserServer) Create(ctx context.Context, req *user.UserSchema, rsp *user.UserSchema) error {
+	if req.Password == "" {
+		return errors.ErrUserNotEmptyPwd
+	}
+
+	err := u.checkUserName(ctx, req.UserName)
+	if err != nil {
+		return err
+	}
+
+	err = u.checkUserEmail(ctx, req.Email)
+	if err != nil {
+		return err
+	}
+
+	req.Password = util.SHA1HashString(req.Password)
+	req.RecordID = util.MustUUID()
+	err = u.userModel.Create(ctx, *req)
+	if err != nil {
+		return err
+	}
+	rsp.RecordID = req.RecordID
+	rsp.UserName = req.UserName
+	rsp.Password = req.Password
+	rsp.Email = req.Email
+	rsp.Roles = req.Roles
+	rsp.Status = req.Status
+
+	return nil
+	//item.Password = util.SHA1HashString(item.Password)
+	//item.RecordID = util.MustUUID()
+	//err = a.UserModel.Create(ctx, item)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//return a.getUpdate(ctx, item.RecordID)
+}
+
+func (u *UserServer) checkUserName(ctx context.Context, userName string) error {
+	result, err := u.userModel.Query(ctx, user.QueryRequest{
+		UserName: userName,
+	}, user.UserQueryOptions{
+		PageParam: &user.PaginationParam{
+			PageSize: -1,
+		},
+	})
+	if err != nil {
+		return err
+	} else if result.PageResult.Total > 0 {
+		return errors.ErrUserNameExists
+	}
+	return nil
+}
+
+func (u *UserServer) checkUserEmail(ctx context.Context, userEmail string) error {
+	result, err := u.userModel.Query(ctx, user.QueryRequest{
+		Email: userEmail,
+	}, user.UserQueryOptions{
+		PageParam: &user.PaginationParam{
+			PageSize: -1,
+		},
+	})
+	if err != nil {
+		return err
+	} else if result.PageResult.Total > 0 {
+		return errors.ErrEmailExists
+	}
+	return nil
 }
 
 func ToRoleIDs(a []*user.UserSchema) []string {

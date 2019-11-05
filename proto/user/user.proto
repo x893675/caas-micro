@@ -7,6 +7,7 @@ package user;
 service User {
 	rpc Query(QueryRequest) returns (QueryResult) {};
 	rpc QueryShow(QueryRequest) returns (UserShowQueryResult) {};
+	rpc Create(UserSchema) returns (UserSchema) {};
 }
 
 message QueryRequest{
