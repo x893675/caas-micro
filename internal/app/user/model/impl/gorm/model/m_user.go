@@ -134,6 +134,82 @@ func (a *User) Delete(ctx context.Context, recordID string) error {
 	})
 }
 
+func (a *User) Update(ctx context.Context, recordID string, item user.UserSchema) error {
+
+	return ExecTrans(ctx, a.db, func(ctx context.Context) error {
+		sitem := gorm.SchemaUser(item)
+		omits := []string{"record_id", "creator"}
+		if sitem.Password == "" {
+			omits = append(omits, "password")
+		}
+
+		result := gorm.GetUserDB(ctx, a.db).Where("record_id=?", recordID).Omit(omits...).Updates(sitem.ToUser())
+		if err := result.Error; err != nil {
+			return errors.WithStack(err)
+		}
+
+		roles, err := a.queryRoles(ctx, recordID)
+		if err != nil {
+			return err
+		}
+
+		clist, dlist, ulist := a.compareUpdateRole(roles, sitem.ToUserRoles())
+		for _, item := range clist {
+			result := gorm.GetUserRoleDB(ctx, a.db).Create(item)
+			if err := result.Error; err != nil {
+				return errors.WithStack(err)
+			}
+		}
+
+		for _, item := range dlist {
+			result := gorm.GetUserRoleDB(ctx, a.db).Where("user_id=? AND role_id=?", recordID, item.RoleID).Delete(gorm.UserRole{})
+			if err := result.Error; err != nil {
+				return errors.WithStack(err)
+			}
+		}
+
+		for _, item := range ulist {
+			result := gorm.GetUserRoleDB(ctx, a.db).Where("user_id=? AND role_id=?", recordID, item.RoleID).Omit("user_id", "role_id").Updates(item)
+			if err := result.Error; err != nil {
+				return errors.WithStack(err)
+			}
+		}
+		return nil
+	})
+}
+
+// 对比并获取需要新增，修改，删除的角色数据
+func (a *User) compareUpdateRole(oldList, newList []*gorm.UserRole) (clist, dlist, ulist []*gorm.UserRole) {
+	for _, nitem := range newList {
+		exists := false
+		for _, oitem := range oldList {
+			if oitem.RoleID == nitem.RoleID {
+				exists = true
+				ulist = append(ulist, nitem)
+				break
+			}
+		}
+		if !exists {
+			clist = append(clist, nitem)
+		}
+	}
+
+	for _, oitem := range oldList {
+		exists := false
+		for _, nitem := range newList {
+			if nitem.RoleID == oitem.RoleID {
+				exists = true
+				break
+			}
+		}
+		if !exists {
+			dlist = append(dlist, oitem)
+		}
+	}
+
+	return
+}
+
 func (a *User) fillSchemaUsers(ctx context.Context, items []*user.UserSchema, opts ...user.UserQueryOptions) error {
 	opt := a.getQueryOption(opts...)
 

@@ -170,3 +170,51 @@ func (a *UserController) Get(c *gin.Context) {
 	//}
 	//ginplus.ResSuccess(c, item.CleanSecure())
 }
+
+// Update 更新数据
+// @Summary 更新数据
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param id path string true "记录ID"
+// @Param body body schema.User true
+// @Success 200 schema.User
+// @Failure 400 schema.HTTPError "{error:{code:0,message:无效的请求参数}}"
+// @Failure 401 schema.HTTPError "{error:{code:0,message:未授权}}"
+// @Failure 500 schema.HTTPError "{error:{code:0,message:服务器错误}}"
+// @Router PUT /api/v1/users/{id}
+func (a *UserController) Update(c *gin.Context) {
+	var item schema.CreateUserParam
+	if err := ginplus.ParseJSON(c, &item); err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+	param := &user.UpdateUserRequest{
+		Uid: c.Param("id"),
+		User: &user.UserSchema{
+			UserName: item.UserName,
+			RealName: item.RealName,
+			Password: item.Password,
+			Phone:    item.Phone,
+			Email:    item.Email,
+			Status:   int64(item.Status),
+			Roles:    item.Roles,
+		},
+	}
+	nitem, err := a.UserSvc.Update(context.TODO(), param)
+	if err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+	ginplus.ResSuccess(c, nitem)
+	//var item schema.User
+	//if err := ginplus.ParseJSON(c, &item); err != nil {
+	//	ginplus.ResError(c, err)
+	//	return
+	//}
+	//
+	//nitem, err := a.UserBll.Update(ginplus.NewContext(c), c.Param("id"), item)
+	//if err != nil {
+	//	ginplus.ResError(c, err)
+	//	return
+	//}
+	//ginplus.ResSuccess(c, nitem.CleanSecure())
+}

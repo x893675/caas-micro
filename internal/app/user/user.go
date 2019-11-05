@@ -247,6 +247,72 @@ func (u *UserServer) Get(ctx context.Context, req *user.GetUserRequest, rsp *use
 	return nil
 }
 
+func (u *UserServer) Update(ctx context.Context, req *user.UpdateUserRequest, rsp *user.UserSchema) error {
+
+	oldItem, err := u.userModel.Get(ctx, req.Uid)
+	if err != nil {
+		return err
+	} else if oldItem == nil {
+		return errors.ErrNotFound
+	} else if oldItem.UserName != req.User.UserName {
+		err := u.checkUserName(ctx, req.User.UserName)
+		if err != nil {
+			return err
+		}
+	} else if oldItem.Email != req.User.Email {
+		err := u.checkUserEmail(ctx, req.User.Email)
+		if err != nil {
+			return err
+		}
+	}
+
+	if req.User.Password != "" {
+		req.User.Password = util.SHA1HashString(req.User.Password)
+	}
+
+	err = u.userModel.Update(ctx, req.Uid, *req.User)
+	if err != nil {
+		return err
+	}
+
+	nitem, err := u.userModel.Get(ctx, req.Uid, user.UserQueryOptions{
+		IncludeRoles: true,
+	})
+	if err != nil {
+		return err
+	}
+
+	rsp.RecordID = nitem.RecordID
+	rsp.UserName = nitem.UserName
+	//rsp.Password = req.Password
+	rsp.Email = nitem.Email
+	rsp.Roles = nitem.Roles
+	rsp.Status = nitem.Status
+
+	return nil
+	//err = a.UserModel.Update(ctx, recordID, item)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//return a.getUpdate(ctx, recordID)
+}
+
+//func (u *UserServer) getUpdate(ctx context.Context, recordID string) (*schema.User, error) {
+//	nitem, err := a.Get(ctx, recordID, schema.UserQueryOptions{
+//		IncludeRoles: true,
+//	})
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	err = a.LoadPolicy(ctx, *nitem)
+//	if err != nil {
+//		return nil, err
+//	}
+//	return nitem, nil
+//}
+
 func (u *UserServer) checkUserName(ctx context.Context, userName string) error {
 	result, err := u.userModel.Query(ctx, user.QueryRequest{
 		UserName: userName,

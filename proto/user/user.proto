@@ -10,6 +10,7 @@ service User {
 	rpc Create(UserSchema) returns (UserSchema) {};
 	rpc Delete(DeleteUserRequest) returns (NullResult) {};
 	rpc Get(GetUserRequest) returns (UserSchema) {};
+	rpc Update(UpdateUserRequest) returns (UserSchema) {};
 }
 
 message QueryRequest{
@@ -39,6 +40,11 @@ message GetUserRequest{
 
 message DeleteUserRequest{
 	string Uid = 1;
+}
+
+message UpdateUserRequest{
+	string Uid = 1;
+	UserSchema User = 2;
 }
 
 message NullResult{
