@@ -205,6 +205,21 @@ func (u *UserServer) Create(ctx context.Context, req *user.UserSchema, rsp *user
 	//return a.getUpdate(ctx, item.RecordID)
 }
 
+func (u *UserServer) Delete(ctx context.Context, req *user.DeleteUserRequest, rsp *user.NullResult) error {
+
+	oldItem, err := u.userModel.Get(ctx, req.Uid)
+	if err != nil {
+		return err
+	} else if oldItem == nil {
+		return errors.ErrNotFound
+	}
+	err = u.userModel.Delete(ctx, req.Uid)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (u *UserServer) checkUserName(ctx context.Context, userName string) error {
 	result, err := u.userModel.Query(ctx, user.QueryRequest{
 		UserName: userName,

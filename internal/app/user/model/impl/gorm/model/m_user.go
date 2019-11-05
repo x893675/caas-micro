@@ -102,6 +102,38 @@ func (a *User) Create(ctx context.Context, item user.UserSchema) error {
 	//})
 }
 
+func (a *User) Get(ctx context.Context, recordID string, opts ...user.UserQueryOptions) (*user.UserSchema, error) {
+	var item gorm.User
+	ok, err := a.db.FindOne(gorm.GetUserDB(ctx, a.db).Where("record_id=?", recordID), &item)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	} else if !ok {
+		return nil, nil
+	}
+	sitem := item.ToSchemaUser()
+	err = a.fillSchemaUsers(ctx, []*user.UserSchema{sitem}, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return sitem, nil
+}
+
+func (a *User) Delete(ctx context.Context, recordID string) error {
+
+	return ExecTrans(ctx, a.db, func(ctx context.Context) error {
+		result := gorm.GetUserDB(ctx, a.db).Where("record_id=?", recordID).Delete(gorm.User{})
+		if err := result.Error; err != nil {
+			return errors.WithStack(err)
+		}
+
+		result = gorm.GetUserRoleDB(ctx, a.db).Where("user_id=?", recordID).Delete(gorm.UserRole{})
+		if err := result.Error; err != nil {
+			return errors.WithStack(err)
+		}
+		return nil
+	})
+}
+
 func (a *User) fillSchemaUsers(ctx context.Context, items []*user.UserSchema, opts ...user.UserQueryOptions) error {
 	opt := a.getQueryOption(opts...)
 

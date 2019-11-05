@@ -38,6 +38,7 @@ type UserService interface {
 	Query(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResult, error)
 	QueryShow(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*UserShowQueryResult, error)
 	Create(ctx context.Context, in *UserSchema, opts ...client.CallOption) (*UserSchema, error)
+	Delete(ctx context.Context, in *DeleteUserRequest, opts ...client.CallOption) (*NullResult, error)
 }
 
 type userService struct {
@@ -88,12 +89,23 @@ func (c *userService) Create(ctx context.Context, in *UserSchema, opts ...client
 	return out, nil
 }
 
+func (c *userService) Delete(ctx context.Context, in *DeleteUserRequest, opts ...client.CallOption) (*NullResult, error) {
+	req := c.c.NewRequest(c.name, "User.Delete", in)
+	out := new(NullResult)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
 	Query(context.Context, *QueryRequest, *QueryResult) error
 	QueryShow(context.Context, *QueryRequest, *UserShowQueryResult) error
 	Create(context.Context, *UserSchema, *UserSchema) error
+	Delete(context.Context, *DeleteUserRequest, *NullResult) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) error {
@@ -101,6 +113,7 @@ func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.Handl
 		Query(ctx context.Context, in *QueryRequest, out *QueryResult) error
 		QueryShow(ctx context.Context, in *QueryRequest, out *UserShowQueryResult) error
 		Create(ctx context.Context, in *UserSchema, out *UserSchema) error
+		Delete(ctx context.Context, in *DeleteUserRequest, out *NullResult) error
 	}
 	type User struct {
 		user
@@ -123,4 +136,8 @@ func (h *userHandler) QueryShow(ctx context.Context, in *QueryRequest, out *User
 
 func (h *userHandler) Create(ctx context.Context, in *UserSchema, out *UserSchema) error {
 	return h.UserHandler.Create(ctx, in, out)
+}
+
+func (h *userHandler) Delete(ctx context.Context, in *DeleteUserRequest, out *NullResult) error {
+	return h.UserHandler.Delete(ctx, in, out)
 }

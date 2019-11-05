@@ -24,5 +24,6 @@ func (api *ApiApplication) RegisterRouter(app *gin.Engine) {
 
 		v1.GET("/users", api.UserCtl.Query)
 		v1.POST("/users", api.UserCtl.Create)
+		v1.DELETE("/users/:id", api.UserCtl.Delete)
 	}
 }

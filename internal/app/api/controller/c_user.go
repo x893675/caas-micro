@@ -110,16 +110,31 @@ func (a *UserController) Create(c *gin.Context) {
 		return
 	}
 	ginplus.ResSuccess(c, nitem)
-	//var item schema.User
-	//if err := ginplus.ParseJSON(c, &item); err != nil {
-	//	ginplus.ResError(c, err)
-	//	return
-	//}
-	//
-	//nitem, err := a.UserBll.Create(ginplus.NewContext(c), item)
+	//ginplus.ResSuccess(c, nitem.CleanSecure())
+}
+
+// Delete 删除数据
+// @Summary 删除数据
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param id path string true "记录ID"
+// @Success 200 schema.HTTPStatus "{status:OK}"
+// @Failure 401 schema.HTTPError "{error:{code:0,message:未授权}}"
+// @Failure 500 schema.HTTPError "{error:{code:0,message:服务器错误}}"
+// @Router DELETE /api/v1/users/{id}
+func (a *UserController) Delete(c *gin.Context) {
+	_, err := a.UserSvc.Delete(context.TODO(), &user.DeleteUserRequest{
+		Uid: c.Param("id"),
+	})
+	if err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+	ginplus.ResOK(c)
+
+	//err := a.UserBll.Delete(ginplus.NewContext(c), c.Param("id"))
 	//if err != nil {
 	//	ginplus.ResError(c, err)
 	//	return
 	//}
-	//ginplus.ResSuccess(c, nitem.CleanSecure())
+	//ginplus.ResOK(c)
 }
