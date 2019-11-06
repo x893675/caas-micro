@@ -166,7 +166,7 @@ func (a *AuthServer) OpensfiftVerify(ctx context.Context, req *auth.LoginRequest
 	}
 
 	rsp.RecordID = item.RecordID
-	rsp.RealName = item.UserName
+	rsp.UserName = item.UserName
 	rsp.RealName = item.RealName
 	rsp.Email = item.Email
 	return nil
