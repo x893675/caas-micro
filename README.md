@@ -49,6 +49,7 @@
 
 * `make build`
 * `make docker`
+* `导入mysql.sql文件中的初始数据`
 
 ### 本地测试
 
