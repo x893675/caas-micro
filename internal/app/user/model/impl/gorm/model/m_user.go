@@ -184,6 +184,15 @@ func (a *User) Update(ctx context.Context, recordID string, item user.UserSchema
 	})
 }
 
+// UpdateStatus 更新状态
+func (a *User) UpdateStatus(ctx context.Context, recordID string, status int) error {
+	result := gorm.GetUserDB(ctx, a.db).Where("record_id=?", recordID).Update("status", status)
+	if err := result.Error; err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}
+
 // 对比并获取需要新增，修改，删除的角色数据
 func (a *User) compareUpdateRole(oldList, newList []*gorm.UserRole) (clist, dlist, ulist []*gorm.UserRole) {
 	for _, nitem := range newList {

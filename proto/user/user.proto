@@ -11,6 +11,7 @@ service User {
 	rpc Delete(DeleteUserRequest) returns (NullResult) {};
 	rpc Get(GetUserRequest) returns (UserSchema) {};
 	rpc Update(UpdateUserRequest) returns (UserSchema) {};
+	rpc UpdataStatus(UpdateUserStatusRequest) returns (NullResult) {}
 }
 
 message QueryRequest{
@@ -45,6 +46,11 @@ message DeleteUserRequest{
 message UpdateUserRequest{
 	string Uid = 1;
 	UserSchema User = 2;
+}
+
+message UpdateUserStatusRequest{
+	string Uid = 1;
+	sint64 Status = 2;
 }
 
 message NullResult{

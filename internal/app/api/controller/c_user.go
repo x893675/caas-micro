@@ -218,3 +218,43 @@ func (a *UserController) Update(c *gin.Context) {
 	//}
 	//ginplus.ResSuccess(c, nitem.CleanSecure())
 }
+
+// Enable 启用数据
+// @Summary 启用数据
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param id path string true "记录ID"
+// @Success 200 schema.HTTPStatus "{status:OK}"
+// @Failure 401 schema.HTTPError "{error:{code:0,message:未授权}}"
+// @Failure 500 schema.HTTPError "{error:{code:0,message:服务器错误}}"
+// @Router PATCH /api/v1/users/{id}/enable
+func (a *UserController) Enable(c *gin.Context) {
+	param := &user.UpdateUserStatusRequest{
+		Uid:    c.Param("id"),
+		Status: 1,
+	}
+	_, err := a.UserSvc.UpdataStatus(context.TODO(), param)
+	if err != nil {
+		ginplus.ResError(c, err)
+	}
+	ginplus.ResOK(c)
+}
+
+// Disable 禁用数据
+// @Summary 禁用数据
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param id path string true "记录ID"
+// @Success 200 schema.HTTPStatus "{status:OK}"
+// @Failure 401 schema.HTTPError "{error:{code:0,message:未授权}}"
+// @Failure 500 schema.HTTPError "{error:{code:0,message:服务器错误}}"
+// @Router PATCH /api/v1/users/{id}/disable
+func (a *UserController) Disable(c *gin.Context) {
+	param := &user.UpdateUserStatusRequest{
+		Uid:    c.Param("id"),
+		Status: 2,
+	}
+	_, err := a.UserSvc.UpdataStatus(context.TODO(), param)
+	if err != nil {
+		ginplus.ResError(c, err)
+	}
+	ginplus.ResOK(c)
+}

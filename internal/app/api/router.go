@@ -27,5 +27,6 @@ func (api *ApiApplication) RegisterRouter(app *gin.Engine) {
 		v1.POST("/users", api.UserCtl.Create)
 		v1.PUT("/users/:id", api.UserCtl.Update)
 		v1.DELETE("/users/:id", api.UserCtl.Delete)
+		v1.PATCH("/users/:id/enable", api.UserCtl.Enable)
 	}
 }

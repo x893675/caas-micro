@@ -298,6 +298,33 @@ func (u *UserServer) Update(ctx context.Context, req *user.UpdateUserRequest, rs
 	//return a.getUpdate(ctx, recordID)
 }
 
+func (u *UserServer) UpdataStatus(ctx context.Context, req *user.UpdateUserStatusRequest, rsp *user.NullResult) error {
+
+	oldItem, err := u.userModel.Get(ctx, req.Uid, user.UserQueryOptions{
+		IncludeRoles: true,
+	})
+	if err != nil {
+		return err
+	} else if oldItem == nil {
+		return errors.ErrNotFound
+	}
+	err = u.userModel.UpdateStatus(ctx, req.Uid, int(req.Status))
+	if err != nil {
+		return err
+	}
+	//if status == 2 {
+	//	a.Enforcer.DeleteUser(recordID)
+	//} else {
+	//	err = a.LoadPolicy(ctx, *oldItem)
+	//	if err != nil {
+	//		return err
+	//	}
+	//}
+	//
+	//return nil
+	return nil
+}
+
 //func (u *UserServer) getUpdate(ctx context.Context, recordID string) (*schema.User, error) {
 //	nitem, err := a.Get(ctx, recordID, schema.UserQueryOptions{
 //		IncludeRoles: true,
