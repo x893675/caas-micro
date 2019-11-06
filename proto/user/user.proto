@@ -11,8 +11,9 @@ service User {
 	rpc Delete(DeleteUserRequest) returns (NullResult) {};
 	rpc Get(GetUserRequest) returns (UserSchema) {};
 	rpc Update(UpdateUserRequest) returns (UserSchema) {};
-	rpc UpdataStatus(UpdateUserStatusRequest) returns (NullResult) {}
-	rpc GetCurrentUser(GetUserRequest) returns (CurrentUserResult) {}
+	rpc UpdataStatus(UpdateUserStatusRequest) returns (NullResult) {};
+	rpc GetCurrentUser(GetUserRequest) returns (CurrentUserResult) {};
+	rpc UpdatePassword(UpdatePassRequest) returns (NullResult) {};
 }
 
 message QueryRequest{
@@ -61,6 +62,12 @@ message CurrentUserResult{
 	string Phone = 5;
 	string Email = 6;
 	repeated string RoleNames = 7;
+}
+
+message UpdatePassRequest{
+	string Uid = 1;
+	string OldPassword = 2;
+	string NewPassword = 3;
 }
 
 message NullResult{

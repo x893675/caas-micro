@@ -289,3 +289,42 @@ func (a *UserController) GetUserInfo(c *gin.Context) {
 	//}
 	//ginplus.ResSuccess(c, info)
 }
+
+// UpdatePassword 更新个人密码
+// @Summary 更新个人密码
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param body body schema.UpdatePasswordParam true
+// @Success 200 schema.HTTPStatus "{status:OK}"
+// @Failure 400 schema.HTTPError "{error:{code:0,message:无效的请求参数}}"
+// @Failure 401 schema.HTTPError "{error:{code:0,message:未授权}}"
+// @Failure 500 schema.HTTPError "{error:{code:0,message:服务器错误}}"
+// @Router PUT /api/v1/current/password
+func (a *UserController) UpdatePassword(c *gin.Context) {
+	var item schema.UpdatePasswordParam
+	if err := ginplus.ParseJSON(c, &item); err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+	_, err := a.UserSvc.UpdatePassword(context.TODO(), &user.UpdatePassRequest{
+		Uid:         ginplus.GetUserID(c),
+		OldPassword: item.OldPassword,
+		NewPassword: item.NewPassword,
+	})
+	if err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+	ginplus.ResOK(c)
+	//var item schema.UpdatePasswordParam
+	//if err := ginplus.ParseJSON(c, &item); err != nil {
+	//	ginplus.ResError(c, err)
+	//	return
+	//}
+	//
+	//err := a.LoginBll.UpdatePassword(ginplus.NewContext(c), ginplus.GetUserID(c), item)
+	//if err != nil {
+	//	ginplus.ResError(c, err)
+	//	return
+	//}
+	//ginplus.ResOK(c)
+}

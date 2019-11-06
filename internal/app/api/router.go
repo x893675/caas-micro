@@ -24,6 +24,7 @@ func (api *ApiApplication) RegisterRouter(app *gin.Engine) {
 
 		// 注册/api/v1/current
 		v1.GET("/current/user", api.UserCtl.GetUserInfo)
+		v1.PUT("/current/password", api.UserCtl.UpdatePassword)
 
 		v1.GET("/users", api.UserCtl.Query)
 		v1.GET("/users/:id", api.UserCtl.Get)

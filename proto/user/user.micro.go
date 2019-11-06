@@ -43,6 +43,7 @@ type UserService interface {
 	Update(ctx context.Context, in *UpdateUserRequest, opts ...client.CallOption) (*UserSchema, error)
 	UpdataStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...client.CallOption) (*NullResult, error)
 	GetCurrentUser(ctx context.Context, in *GetUserRequest, opts ...client.CallOption) (*CurrentUserResult, error)
+	UpdatePassword(ctx context.Context, in *UpdatePassRequest, opts ...client.CallOption) (*NullResult, error)
 }
 
 type userService struct {
@@ -143,6 +144,16 @@ func (c *userService) GetCurrentUser(ctx context.Context, in *GetUserRequest, op
 	return out, nil
 }
 
+func (c *userService) UpdatePassword(ctx context.Context, in *UpdatePassRequest, opts ...client.CallOption) (*NullResult, error) {
+	req := c.c.NewRequest(c.name, "User.UpdatePassword", in)
+	out := new(NullResult)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
@@ -154,6 +165,7 @@ type UserHandler interface {
 	Update(context.Context, *UpdateUserRequest, *UserSchema) error
 	UpdataStatus(context.Context, *UpdateUserStatusRequest, *NullResult) error
 	GetCurrentUser(context.Context, *GetUserRequest, *CurrentUserResult) error
+	UpdatePassword(context.Context, *UpdatePassRequest, *NullResult) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) error {
@@ -166,6 +178,7 @@ func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.Handl
 		Update(ctx context.Context, in *UpdateUserRequest, out *UserSchema) error
 		UpdataStatus(ctx context.Context, in *UpdateUserStatusRequest, out *NullResult) error
 		GetCurrentUser(ctx context.Context, in *GetUserRequest, out *CurrentUserResult) error
+		UpdatePassword(ctx context.Context, in *UpdatePassRequest, out *NullResult) error
 	}
 	type User struct {
 		user
@@ -208,4 +221,8 @@ func (h *userHandler) UpdataStatus(ctx context.Context, in *UpdateUserStatusRequ
 
 func (h *userHandler) GetCurrentUser(ctx context.Context, in *GetUserRequest, out *CurrentUserResult) error {
 	return h.UserHandler.GetCurrentUser(ctx, in, out)
+}
+
+func (h *userHandler) UpdatePassword(ctx context.Context, in *UpdatePassRequest, out *NullResult) error {
+	return h.UserHandler.UpdatePassword(ctx, in, out)
 }

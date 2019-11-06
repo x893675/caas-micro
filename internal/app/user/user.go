@@ -366,6 +366,26 @@ func (u *UserServer) GetCurrentUser(ctx context.Context, req *user.GetUserReques
 	//return loginInfo, nil
 }
 
+func (u *UserServer) UpdatePassword(ctx context.Context, req *user.UpdatePassRequest, rsp *user.NullResult) error {
+	//if CheckIsRootUser(ctx, userID) {
+	//	return errors.ErrLoginNotAllowModifyPwd
+	//}
+	//
+	userInfo, err := u.userModel.Get(ctx, req.Uid)
+	if err != nil {
+		return err
+	} else if userInfo == nil {
+		return errors.ErrInvalidUser
+	} else if userInfo.Status != 1 {
+		return errors.ErrUserDisable
+	} else if util.SHA1HashString(req.OldPassword) != userInfo.Password {
+		return errors.ErrLoginInvalidOldPwd
+	}
+	req.NewPassword = util.SHA1HashString(req.NewPassword)
+	return u.userModel.UpdatePassword(ctx, req.Uid, req.NewPassword)
+	//return a.UserModel.UpdatePassword(ctx, userID, params.NewPassword)
+}
+
 //func (u *UserServer) getUpdate(ctx context.Context, recordID string) (*schema.User, error) {
 //	nitem, err := a.Get(ctx, recordID, schema.UserQueryOptions{
 //		IncludeRoles: true,
