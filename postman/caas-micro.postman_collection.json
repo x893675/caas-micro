@@ -1,0 +1,513 @@
+{
+	"info": {
+		"_postman_id": "1f6ba145-db2d-4cae-b8e2-7f4ac165c58e",
+		"name": "caas-micro",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user_name\": \"admin\",\n\t\"password\": \"admin\"\n}"
+				},
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/login",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzMwMTUzNzcsImlhdCI6MTU3MzAwODE3NywibmJmIjoxNTczMDA4MTc3LCJzdWIiOiI1ODY2NTM2OS04YWUxLTQzZWEtYjU0MC02YTEwMmMxMzRjOTQifQ.vbAjWS5VBV5YwEG2OOruDI0SIk1W2k5BwpVMkZ_UjxDER-ljxJqtn9FIleLFSASNfWV1n-Vk6HCmJnt8eCJEl",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user_name\": \"admin\",\n\t\"password\": \"admin\"\n}"
+				},
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/login/exit",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"login",
+						"exit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "listusers",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzMwMTUzNzcsImlhdCI6MTU3MzAwODE3NywibmJmIjoxNTczMDA4MTc3LCJzdWIiOiI1ODY2NTM2OS04YWUxLTQzZWEtYjU0MC02YTEwMmMxMzRjOTQifQ.vbAjWS5VBV5YwEG2OOruDI0SIk1W2k5BwpVMkZ_UjxDER-ljxJqtn9FIleLFSASNfWV1n-Vk6HCmJnt8eCJElQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/users?q=page",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "page"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getuser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzI5NDM0NzksImlhdCI6MTU3MjkzNjI3OSwibmJmIjoxNTcyOTM2Mjc5LCJzdWIiOiI1ODY2NTM2OS04YWUxLTQzZWEtYjU0MC02YTEwMmMxMzRjOTQifQ.UXK9SHWFMzNckzTfdB961OWgS64gPTumrNc8DryBiPyES1huG5fSL160VVV0aC3RPjnS-XAj2MLLwfa8WXigaw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/users/:id",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "78170696-05ff-424d-9d86-f8cf1a3825d3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createuser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzI5NDM0NzksImlhdCI6MTU3MjkzNjI3OSwibmJmIjoxNTcyOTM2Mjc5LCJzdWIiOiI1ODY2NTM2OS04YWUxLTQzZWEtYjU0MC02YTEwMmMxMzRjOTQifQ.UXK9SHWFMzNckzTfdB961OWgS64gPTumrNc8DryBiPyES1huG5fSL160VVV0aC3RPjnS-XAj2MLLwfa8WXigaw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user_name\": \"zhuxiaowei2\",\n\t\"real_name\": \"zhuxiaowei\",\n\t\"password\": \"zhuxiaowei\",\n\t\"email\": \"zhu.xiaowei@99cloud.net\",\n\t\"status\": 1,\n\t\"roles\":[\n\t\t{\n\t\t\t\"RoleID\": \"0b4628a5-683a-4b15-8c14-0448a0737946\"\n\t\t}\n\t]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/users",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteuser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzI5NDM0NzksImlhdCI6MTU3MjkzNjI3OSwibmJmIjoxNTcyOTM2Mjc5LCJzdWIiOiI1ODY2NTM2OS04YWUxLTQzZWEtYjU0MC02YTEwMmMxMzRjOTQifQ.UXK9SHWFMzNckzTfdB961OWgS64gPTumrNc8DryBiPyES1huG5fSL160VVV0aC3RPjnS-XAj2MLLwfa8WXigaw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/users/:id",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "06d9c658-2b88-45e3-8a68-9f305496a773"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateuser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzI5NTE0NDEsImlhdCI6MTU3Mjk0NDI0MSwibmJmIjoxNTcyOTQ0MjQxLCJzdWIiOiI3ODE3MDY5Ni0wNWZmLTQyNGQtOWQ4Ni1mOGNmMWEzODI1ZDMifQ.SoxleLqXSn_fo0xnPBpAWde-sPVS5_fcBO_lmxXlumoBHHwK-6p-mHwXwRkifTZvSakOEupTnKa6jk8mGwundw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user_name\": \"zxw7\",\n\t\"real_name\": \"zxw8\",\n\t\"password\": \"zxw1\",\n\t\"email\": \"zhu.xiaowei88@99cloud.net\",\n\t\"status\": 1,\n\t\"roles\":[\n\t\t{\n\t\t\t\"RoleID\": \"0b4628a5-683a-4b15-8c14-0448a0737946\"\n\t\t}\n\t]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/users/:id",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "78170696-05ff-424d-9d86-f8cf1a3825d3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "enableuser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzMwMTAzOTksImlhdCI6MTU3MzAwMzE5OSwibmJmIjoxNTczMDAzMTk5LCJzdWIiOiI1ODY2NTM2OS04YWUxLTQzZWEtYjU0MC02YTEwMmMxMzRjOTQifQ.bW_ZoNjScoJyeicWaKA9M6xvDtmoVLuEmlYys45ZoQXdbXiG3EDi645onJgXCM0DztHgK5YpE1YAwbdWYBdPSA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/users/:id/enable",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						":id",
+						"enable"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "78170696-05ff-424d-9d86-f8cf1a3825d3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "disableuser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzMwMTAzOTksImlhdCI6MTU3MzAwMzE5OSwibmJmIjoxNTczMDAzMTk5LCJzdWIiOiI1ODY2NTM2OS04YWUxLTQzZWEtYjU0MC02YTEwMmMxMzRjOTQifQ.bW_ZoNjScoJyeicWaKA9M6xvDtmoVLuEmlYys45ZoQXdbXiG3EDi645onJgXCM0DztHgK5YpE1YAwbdWYBdPSA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/users/:id/disable",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						":id",
+						"disable"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "78170696-05ff-424d-9d86-f8cf1a3825d3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "currentuser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzMwMTAzOTksImlhdCI6MTU3MzAwMzE5OSwibmJmIjoxNTczMDAzMTk5LCJzdWIiOiI1ODY2NTM2OS04YWUxLTQzZWEtYjU0MC02YTEwMmMxMzRjOTQifQ.bW_ZoNjScoJyeicWaKA9M6xvDtmoVLuEmlYys45ZoQXdbXiG3EDi645onJgXCM0DztHgK5YpE1YAwbdWYBdPSA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/current/user",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"current",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdatePassword",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzMwMTAzOTksImlhdCI6MTU3MzAwMzE5OSwibmJmIjoxNTczMDAzMTk5LCJzdWIiOiI1ODY2NTM2OS04YWUxLTQzZWEtYjU0MC02YTEwMmMxMzRjOTQifQ.bW_ZoNjScoJyeicWaKA9M6xvDtmoVLuEmlYys45ZoQXdbXiG3EDi645onJgXCM0DztHgK5YpE1YAwbdWYBdPSA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"old_password\": \"zhuxiaowei2\",\n\t\"new_password\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/current/password",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"current",
+						"password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "openshiftlogin",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.234.137:8080/api/v1/auth",
+					"host": [
+						"192",
+						"168",
+						"234",
+						"137"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
