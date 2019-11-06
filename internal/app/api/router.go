@@ -12,15 +12,15 @@ func (api *ApiApplication) RegisterRouter(app *gin.Engine) {
 	g.Use(middleware.UserAuthMiddleware(
 		api.LoginCtl.AuthSvc,
 		middleware.AllowMethodAndPathPrefixSkipper(
+			middleware.JoinRouter("GET", "/api/v1/login"),
 			middleware.JoinRouter("POST", "/api/v1/login"),
 			//middleware.JoinRouter("GET", "/api/v1/users"),
 		),
 	))
 	v1 := g.Group("/v1")
 	{
-		//v1.GET("/greeter", api.LoginCtl.Anything)
-		//v1.GET("/greeter/:name", api.LoginCtl.Hello)
 		v1.POST("/login", api.LoginCtl.Login)
+		v1.POST("/login/exit", api.LoginCtl.Logout)
 
 		// 注册/api/v1/current
 		v1.GET("/current/user", api.UserCtl.GetUserInfo)

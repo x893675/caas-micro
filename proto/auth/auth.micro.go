@@ -36,7 +36,7 @@ var _ server.Option
 type AuthService interface {
 	Verify(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*Token, error)
 	//rpc GenerateToken(Request) returns (Response) {};
-	DestroyToken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	DestroyToken(ctx context.Context, in *TokenString, opts ...client.CallOption) (*NullResult, error)
 	VertifyToken(ctx context.Context, in *TokenString, opts ...client.CallOption) (*VerifyResponse, error)
 }
 
@@ -68,9 +68,9 @@ func (c *authService) Verify(ctx context.Context, in *LoginRequest, opts ...clie
 	return out, nil
 }
 
-func (c *authService) DestroyToken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+func (c *authService) DestroyToken(ctx context.Context, in *TokenString, opts ...client.CallOption) (*NullResult, error) {
 	req := c.c.NewRequest(c.name, "Auth.DestroyToken", in)
-	out := new(Response)
+	out := new(NullResult)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -93,14 +93,14 @@ func (c *authService) VertifyToken(ctx context.Context, in *TokenString, opts ..
 type AuthHandler interface {
 	Verify(context.Context, *LoginRequest, *Token) error
 	//rpc GenerateToken(Request) returns (Response) {};
-	DestroyToken(context.Context, *Request, *Response) error
+	DestroyToken(context.Context, *TokenString, *NullResult) error
 	VertifyToken(context.Context, *TokenString, *VerifyResponse) error
 }
 
 func RegisterAuthHandler(s server.Server, hdlr AuthHandler, opts ...server.HandlerOption) error {
 	type auth interface {
 		Verify(ctx context.Context, in *LoginRequest, out *Token) error
-		DestroyToken(ctx context.Context, in *Request, out *Response) error
+		DestroyToken(ctx context.Context, in *TokenString, out *NullResult) error
 		VertifyToken(ctx context.Context, in *TokenString, out *VerifyResponse) error
 	}
 	type Auth struct {
@@ -118,7 +118,7 @@ func (h *authHandler) Verify(ctx context.Context, in *LoginRequest, out *Token) 
 	return h.AuthHandler.Verify(ctx, in, out)
 }
 
-func (h *authHandler) DestroyToken(ctx context.Context, in *Request, out *Response) error {
+func (h *authHandler) DestroyToken(ctx context.Context, in *TokenString, out *NullResult) error {
 	return h.AuthHandler.DestroyToken(ctx, in, out)
 }
 

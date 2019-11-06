@@ -93,11 +93,12 @@ func (a *AuthServer) generateToken(ctx context.Context, userID string, token *au
 	return nil
 }
 
-func (a *AuthServer) DestroyToken(ctx context.Context, req *auth.Request, rsp *auth.Response) error {
+func (a *AuthServer) DestroyToken(ctx context.Context, req *auth.TokenString, rsp *auth.NullResult) error {
 	log.Println("in DestroyToken")
-	log.Println(req.Username)
-	log.Println(req.Password)
-	rsp.Msg = "Hello " + req.Username
+	err := a.auther.DestroyToken(req.Token)
+	if err != nil {
+		return errors.WithStack(err)
+	}
 	return nil
 }
 
