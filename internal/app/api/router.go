@@ -14,6 +14,7 @@ func (api *ApiApplication) RegisterRouter(app *gin.Engine) {
 		middleware.AllowMethodAndPathPrefixSkipper(
 			middleware.JoinRouter("GET", "/api/v1/login"),
 			middleware.JoinRouter("POST", "/api/v1/login"),
+			middleware.JoinRouter("GET", "/api/v1/auth"),
 			//middleware.JoinRouter("GET", "/api/v1/users"),
 		),
 	))
@@ -21,6 +22,7 @@ func (api *ApiApplication) RegisterRouter(app *gin.Engine) {
 	{
 		v1.POST("/login", api.LoginCtl.Login)
 		v1.POST("/login/exit", api.LoginCtl.Logout)
+		v1.GET("/auth", api.LoginCtl.OpenshiftLogin)
 
 		// 注册/api/v1/current
 		v1.GET("/current/user", api.UserCtl.GetUserInfo)
