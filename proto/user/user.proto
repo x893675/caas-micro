@@ -12,6 +12,7 @@ service User {
 	rpc Get(GetUserRequest) returns (UserSchema) {};
 	rpc Update(UpdateUserRequest) returns (UserSchema) {};
 	rpc UpdataStatus(UpdateUserStatusRequest) returns (NullResult) {}
+	rpc GetCurrentUser(GetUserRequest) returns (CurrentUserResult) {}
 }
 
 message QueryRequest{
@@ -51,6 +52,15 @@ message UpdateUserRequest{
 message UpdateUserStatusRequest{
 	string Uid = 1;
 	sint64 Status = 2;
+}
+
+message CurrentUserResult{
+	string RecordID = 1;
+	string UserName = 2;
+	string RealName = 3;
+	string Phone = 5;
+	string Email = 6;
+	repeated string RoleNames = 7;
 }
 
 message NullResult{

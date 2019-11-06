@@ -258,3 +258,34 @@ func (a *UserController) Disable(c *gin.Context) {
 	}
 	ginplus.ResOK(c)
 }
+
+// GetUserInfo 获取当前用户信息
+// @Summary 获取当前用户信息
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Success 200 schema.UserLoginInfo
+// @Failure 401 schema.HTTPError "{error:{code:0,message:未授权}}"
+// @Failure 500 schema.HTTPError "{error:{code:0,message:服务器错误}}"
+// @Router GET /api/v1/current/user
+func (a *UserController) GetUserInfo(c *gin.Context) {
+	param := &user.GetUserRequest{
+		Uid: ginplus.GetUserID(c),
+		QueryOpt: &user.UserQueryOptions{
+			IncludeRoles: true,
+		},
+	}
+	info, err := a.UserSvc.GetCurrentUser(context.TODO(), param)
+
+	if err != nil {
+		ginplus.ResError(c, err)
+		return
+	}
+
+	ginplus.ResSuccess(c, info)
+
+	//info, err := a.LoginBll.GetLoginInfo(ginplus.NewContext(c), ginplus.GetUserID(c))
+	//if err != nil {
+	//	ginplus.ResError(c, err)
+	//	return
+	//}
+	//ginplus.ResSuccess(c, info)
+}

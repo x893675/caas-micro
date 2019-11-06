@@ -28,6 +28,10 @@ func UserAuthMiddleware(a auth.AuthService, skipper ...SkipperFunc) gin.HandlerF
 			userID = resp.GetUid()
 		}
 
+		if userID != "" {
+			c.Set(ginplus.UserIDKey, userID)
+		}
+
 		if len(skipper) > 0 && skipper[0](c) {
 			c.Next()
 			return

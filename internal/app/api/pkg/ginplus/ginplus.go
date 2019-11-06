@@ -92,6 +92,16 @@ func ParseJSON(c *gin.Context, obj interface{}) error {
 	return nil
 }
 
+// GetUserID 获取用户ID
+func GetUserID(c *gin.Context) string {
+	return c.GetString(UserIDKey)
+}
+
+// SetUserID 设定用户ID
+func SetUserID(c *gin.Context, userID string) {
+	c.Set(UserIDKey, userID)
+}
+
 // GetToken 获取用户令牌
 func GetToken(c *gin.Context) string {
 	var token string

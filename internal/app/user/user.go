@@ -325,6 +325,47 @@ func (u *UserServer) UpdataStatus(ctx context.Context, req *user.UpdateUserStatu
 	return nil
 }
 
+func (u *UserServer) GetCurrentUser(ctx context.Context, req *user.GetUserRequest, rsp *user.CurrentUserResult) error {
+
+	userInfo, err := u.userModel.Get(ctx, req.Uid, *req.QueryOpt)
+	if err != nil {
+		return err
+	} else if userInfo == nil {
+		return errors.ErrInvalidUser
+	} else if userInfo.Status != 1 {
+		return errors.ErrUserDisable
+	}
+
+	rsp.RecordID = userInfo.RecordID
+	rsp.UserName = userInfo.UserName
+	rsp.RealName = userInfo.RealName
+	rsp.Phone = userInfo.Phone
+	rsp.Email = userInfo.Email
+
+	var userlist []*user.UserSchema
+	userlist = append(userlist, userInfo)
+	if roleIDs := ToRoleIDs(userlist); len(roleIDs) > 0 {
+		roles, err := u.roleModel.Query(ctx, user.RoleQueryParam{
+			RecordIDs: roleIDs,
+		})
+		if err != nil {
+			return err
+		}
+		rsp.RoleNames = roleToRoleNames(roles.Data)
+	}
+	return nil
+	//if roleIDs := user.Roles.ToRoleIDs(); len(roleIDs) > 0 {
+	//	roles, err := a.RoleModel.Query(ctx, schema.RoleQueryParam{
+	//		RecordIDs: roleIDs,
+	//	})
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	loginInfo.RoleNames = roles.Data.ToNames()
+	//}
+	//return loginInfo, nil
+}
+
 //func (u *UserServer) getUpdate(ctx context.Context, recordID string) (*schema.User, error) {
 //	nitem, err := a.Get(ctx, recordID, schema.UserQueryOptions{
 //		IncludeRoles: true,
@@ -387,6 +428,15 @@ func roleToRoleIDs(a []*user.UserRole) []string {
 		list[i] = item.RoleID
 	}
 	return list
+}
+
+// ToNames 获取角色名称列表
+func roleToRoleNames(a []*user.RoleSchema) []string {
+	names := make([]string, len(a))
+	for i, item := range a {
+		names[i] = item.Name
+	}
+	return names
 }
 
 func rolesToMap(a []*user.RoleSchema) map[string]*user.RoleSchema {

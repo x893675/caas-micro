@@ -42,6 +42,7 @@ type UserService interface {
 	Get(ctx context.Context, in *GetUserRequest, opts ...client.CallOption) (*UserSchema, error)
 	Update(ctx context.Context, in *UpdateUserRequest, opts ...client.CallOption) (*UserSchema, error)
 	UpdataStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...client.CallOption) (*NullResult, error)
+	GetCurrentUser(ctx context.Context, in *GetUserRequest, opts ...client.CallOption) (*CurrentUserResult, error)
 }
 
 type userService struct {
@@ -132,6 +133,16 @@ func (c *userService) UpdataStatus(ctx context.Context, in *UpdateUserStatusRequ
 	return out, nil
 }
 
+func (c *userService) GetCurrentUser(ctx context.Context, in *GetUserRequest, opts ...client.CallOption) (*CurrentUserResult, error) {
+	req := c.c.NewRequest(c.name, "User.GetCurrentUser", in)
+	out := new(CurrentUserResult)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
@@ -142,6 +153,7 @@ type UserHandler interface {
 	Get(context.Context, *GetUserRequest, *UserSchema) error
 	Update(context.Context, *UpdateUserRequest, *UserSchema) error
 	UpdataStatus(context.Context, *UpdateUserStatusRequest, *NullResult) error
+	GetCurrentUser(context.Context, *GetUserRequest, *CurrentUserResult) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) error {
@@ -153,6 +165,7 @@ func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.Handl
 		Get(ctx context.Context, in *GetUserRequest, out *UserSchema) error
 		Update(ctx context.Context, in *UpdateUserRequest, out *UserSchema) error
 		UpdataStatus(ctx context.Context, in *UpdateUserStatusRequest, out *NullResult) error
+		GetCurrentUser(ctx context.Context, in *GetUserRequest, out *CurrentUserResult) error
 	}
 	type User struct {
 		user
@@ -191,4 +204,8 @@ func (h *userHandler) Update(ctx context.Context, in *UpdateUserRequest, out *Us
 
 func (h *userHandler) UpdataStatus(ctx context.Context, in *UpdateUserStatusRequest, out *NullResult) error {
 	return h.UserHandler.UpdataStatus(ctx, in, out)
+}
+
+func (h *userHandler) GetCurrentUser(ctx context.Context, in *GetUserRequest, out *CurrentUserResult) error {
+	return h.UserHandler.GetCurrentUser(ctx, in, out)
 }

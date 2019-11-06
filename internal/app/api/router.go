@@ -22,6 +22,9 @@ func (api *ApiApplication) RegisterRouter(app *gin.Engine) {
 		//v1.GET("/greeter/:name", api.LoginCtl.Hello)
 		v1.POST("/login", api.LoginCtl.Login)
 
+		// 注册/api/v1/current
+		v1.PUT("/current/password", api.UserCtl.GetUserInfo)
+
 		v1.GET("/users", api.UserCtl.Query)
 		v1.GET("/users/:id", api.UserCtl.Get)
 		v1.POST("/users", api.UserCtl.Create)
