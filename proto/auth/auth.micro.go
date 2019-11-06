@@ -38,6 +38,7 @@ type AuthService interface {
 	//rpc GenerateToken(Request) returns (Response) {};
 	DestroyToken(ctx context.Context, in *TokenString, opts ...client.CallOption) (*NullResult, error)
 	VertifyToken(ctx context.Context, in *TokenString, opts ...client.CallOption) (*VerifyResponse, error)
+	OpensfiftVerify(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*OpenshiftAuthResult, error)
 }
 
 type authService struct {
@@ -88,6 +89,16 @@ func (c *authService) VertifyToken(ctx context.Context, in *TokenString, opts ..
 	return out, nil
 }
 
+func (c *authService) OpensfiftVerify(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*OpenshiftAuthResult, error) {
+	req := c.c.NewRequest(c.name, "Auth.OpensfiftVerify", in)
+	out := new(OpenshiftAuthResult)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Auth service
 
 type AuthHandler interface {
@@ -95,6 +106,7 @@ type AuthHandler interface {
 	//rpc GenerateToken(Request) returns (Response) {};
 	DestroyToken(context.Context, *TokenString, *NullResult) error
 	VertifyToken(context.Context, *TokenString, *VerifyResponse) error
+	OpensfiftVerify(context.Context, *LoginRequest, *OpenshiftAuthResult) error
 }
 
 func RegisterAuthHandler(s server.Server, hdlr AuthHandler, opts ...server.HandlerOption) error {
@@ -102,6 +114,7 @@ func RegisterAuthHandler(s server.Server, hdlr AuthHandler, opts ...server.Handl
 		Verify(ctx context.Context, in *LoginRequest, out *Token) error
 		DestroyToken(ctx context.Context, in *TokenString, out *NullResult) error
 		VertifyToken(ctx context.Context, in *TokenString, out *VerifyResponse) error
+		OpensfiftVerify(ctx context.Context, in *LoginRequest, out *OpenshiftAuthResult) error
 	}
 	type Auth struct {
 		auth
@@ -124,4 +137,8 @@ func (h *authHandler) DestroyToken(ctx context.Context, in *TokenString, out *Nu
 
 func (h *authHandler) VertifyToken(ctx context.Context, in *TokenString, out *VerifyResponse) error {
 	return h.AuthHandler.VertifyToken(ctx, in, out)
+}
+
+func (h *authHandler) OpensfiftVerify(ctx context.Context, in *LoginRequest, out *OpenshiftAuthResult) error {
+	return h.AuthHandler.OpensfiftVerify(ctx, in, out)
 }

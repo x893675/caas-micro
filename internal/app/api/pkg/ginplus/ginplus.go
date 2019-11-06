@@ -5,6 +5,7 @@ import (
 	"caas-micro/pkg/errors"
 	"caas-micro/pkg/util"
 	"caas-micro/proto/user"
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"strings"
@@ -113,6 +114,22 @@ func GetToken(c *gin.Context) string {
 	return token
 }
 
+// GetBasicToken 获取basic认证信息
+func GetBasicToken(c *gin.Context) (string, string, error) {
+	var token string
+	auth := c.GetHeader("Authorization")
+	prefix := "Basic "
+	if auth != "" && strings.HasPrefix(auth, prefix) {
+		token = auth[len(prefix):]
+	}
+	credential, err := base64.StdEncoding.DecodeString(token)
+	if err != nil {
+		return "", "", err
+	}
+	userAndPassword := strings.Split(string(credential), ":")
+	return userAndPassword[0], userAndPassword[1], nil
+}
+
 // ResJSON 响应JSON数据
 func ResJSON(c *gin.Context, status int, v interface{}) {
 	buf, err := util.JSONMarshal(v)
@@ -183,4 +200,9 @@ func GetPaginationParam(c *gin.Context) *user.PaginationParam {
 		PageIndex: int64(GetPageIndex(c)),
 		PageSize:  int64(GetPageSize(c)),
 	}
+}
+
+// ResOpenshiftLoginError 响应openshfit登录错误
+func ResOpenshiftLoginError(c *gin.Context, err error) {
+	ResJSON(c, http.StatusUnauthorized, schema.OpenshiftLoginError{Msg: err.Error()})
 }

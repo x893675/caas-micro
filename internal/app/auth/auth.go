@@ -114,9 +114,6 @@ func (a *AuthServer) Verify(ctx context.Context, req *auth.LoginRequest, rsp *au
 		return errors.ErrInvalidUserName
 	}
 
-	userid := response.Data[0].RecordID
-	log.Println("in verify, password is ", response.Data[0].Password)
-
 	item := response.Data[0]
 	if item.Password != util.SHA1HashString(req.Password) {
 		return errors.ErrInvalidPassword
@@ -124,7 +121,7 @@ func (a *AuthServer) Verify(ctx context.Context, req *auth.LoginRequest, rsp *au
 		return errors.ErrUserDisable
 	}
 
-	err = a.generateToken(ctx, userid, rsp)
+	err = a.generateToken(ctx, item.RecordID, rsp)
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
@@ -146,5 +143,31 @@ func (a *AuthServer) VertifyToken(ctx context.Context, req *auth.TokenString, rs
 	}
 
 	rsp.Uid = uid
+	return nil
+}
+
+func (a *AuthServer) OpensfiftVerify(ctx context.Context, req *auth.LoginRequest, rsp *auth.OpenshiftAuthResult) error {
+	log.Println("in OpensfiftVerify")
+	response, err := a.userSvc.Query(ctx, &user.QueryRequest{
+		UserName: req.Username,
+	})
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	} else if len(response.Data) == 0 {
+		return errors.ErrInvalidUserName
+	}
+
+	item := response.Data[0]
+	if item.Password != util.SHA1HashString(req.Password) {
+		return errors.ErrInvalidPassword
+	} else if item.Status != 1 {
+		return errors.ErrUserDisable
+	}
+
+	rsp.RecordID = item.RecordID
+	rsp.RealName = item.UserName
+	rsp.RealName = item.RealName
+	rsp.Email = item.Email
 	return nil
 }

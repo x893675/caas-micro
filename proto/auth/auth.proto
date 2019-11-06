@@ -8,6 +8,7 @@ service Auth {
 	//rpc GenerateToken(Request) returns (Response) {};
 	rpc DestroyToken(TokenString) returns (NullResult) {};
 	rpc VertifyToken(TokenString) returns (VerifyResponse) {};
+	rpc OpensfiftVerify(LoginRequest) returns (OpenshiftAuthResult) {};
 }
 
 message LoginRequest{
@@ -31,6 +32,13 @@ message VerifyResponse{
 message Request {
 	string username = 1;
     string password = 2;
+}
+
+message OpenshiftAuthResult{
+	string RecordID = 1;
+	string UserName = 2;
+	string RealName = 3;
+	string Email = 4;
 }
 
 message NullResult{

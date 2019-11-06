@@ -93,3 +93,38 @@ func (a *LoginController) Logout(c *gin.Context) {
 	//}
 	//ginplus.ResOK(c)
 }
+
+// OpenshiftLogin openshift登录验证
+// @Summary openshift登录验证
+// @Param Authorization header string true "Basic 用户令牌"
+// @Success 200 schema.OpenshiftUserShow
+// @Failure 401 schema.HTTPError "{error:{code:400,message:无效的密码}}"
+// @Router GET /api/v1/auth
+func (a *LoginController) OpenshiftLogin(c *gin.Context) {
+
+	username, password, err := ginplus.GetBasicToken(c)
+	if err != nil {
+		ginplus.ResError(c, err)
+	}
+	userInfo, err := a.AuthSvc.OpensfiftVerify(context.TODO(), &auth.LoginRequest{
+		Username: username,
+		Password: password,
+	})
+	if err != nil {
+		ginplus.ResOpenshiftLoginError(c, err)
+	}
+	ginplus.ResSuccess(c, userInfo)
+	//username, password, err := ginplus.GetBasicToken(c)
+	//
+	//if err != nil {
+	//	ginplus.ResError(c, err)
+	//}
+	//
+	//user, err := a.LoginBll.Verify(ginplus.NewContext(c), username, password)
+	//if err != nil {
+	//	ginplus.ResOpenshiftLoginError(c, err)
+	//	return
+	//}
+	//
+	//ginplus.ResSuccess(c, user.ToOpenshiftShows())
+}

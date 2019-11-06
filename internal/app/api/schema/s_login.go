@@ -42,3 +42,8 @@ type CreateUserParam struct {
 	CreatedAt time.Time        `json:"created_at" swaggo:"false,创建时间"`
 	Roles     []*user.UserRole `json:"roles" binding:"required,gt=0" swaggo:"true,角色授权"`
 }
+
+// OpenshiftLoginError openshift登录错误
+type OpenshiftLoginError struct {
+	Msg string `json:"error"`
+}
