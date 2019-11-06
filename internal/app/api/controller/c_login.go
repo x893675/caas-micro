@@ -114,7 +114,13 @@ func (a *LoginController) OpenshiftLogin(c *gin.Context) {
 		ginplus.ResOpenshiftLoginError(c, err)
 		return
 	}
-	ginplus.ResSuccess(c, userInfo)
+	userShow := schema.OpenshiftUserShow{
+		RecordID: userInfo.RecordID,
+		UserName: userInfo.UserName,
+		RealName: userInfo.RealName,
+		Email:    userInfo.Email,
+	}
+	ginplus.ResSuccess(c, userShow)
 	//username, password, err := ginplus.GetBasicToken(c)
 	//
 	//if err != nil {

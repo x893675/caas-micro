@@ -47,3 +47,11 @@ type CreateUserParam struct {
 type OpenshiftLoginError struct {
 	Msg string `json:"error"`
 }
+
+// OpenshiftUserShow 用户显示项
+type OpenshiftUserShow struct {
+	RecordID string `json:"sub" swaggo:"false,记录ID"`
+	UserName string `json:"name" swaggo:"true,用户名"`
+	RealName string `json:"preferred_username" swaggo:"true,真实姓名"`
+	Email    string `json:"email" swaggo:"false,邮箱"`
+}
